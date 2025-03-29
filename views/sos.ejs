@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Request</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              sos: "#E53935",
+              appBg: "#F8F9FA",
+              cardBg: "#FFFFFF", 
+              appBlue: "#4A90E2",
+              appText: "#333333",
+              appGray: "#757575"
+            }
+          }
+        }
+      }
+    </script>
+</head>
+<body class="bg-appBg min-h-screen flex flex-col items-center p-4">
+
+    <!-- Header -->
+    <div class="fixed top-0 left-0 right-0 bg-white shadow-sm z-10">
+        <div class="max-w-md mx-auto px-4 h-16 flex items-center justify-between">
+          <a href="/" class="p-2 rounded-full hover:bg-gray-100">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </a>
+          <h1 class="text-lg font-semibold">SocietySync</h1>
+          <button class="bg-sos text-white rounded-full w-10 h-10 flex items-center justify-center animate-pulse-sos shadow-md">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+          </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="mt-20 w-full max-w-md">
+        <div class="bg-white p-4 shadow-md rounded-lg mb-4">
+            <h2 class="text-lg font-semibold mb-2">Send emergency notification</h2>
+            <ul>
+                <li class="p-2 border-b">John Doe - 123-456-7890</li>
+                <li class="p-2 border-b">Jane Smith - 987-654-3210</li>
+                <li class="p-2">Mike Johnson - 555-555-5555</li>
+            </ul>
+        </div>
+
+        <div class="bg-white p-4 shadow-md rounded-lg">
+            <h2 class="text-lg font-semibold mb-2">Nearby Help Alert</h2>
+            <p class="text-sm text-appGray">Find nearby users who can assist you in an emergency.</p>
+            <button class="mt-2 w-full bg-appBlue text-white py-2 rounded-md">Send Alert</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-10">
+        <div class="max-w-md mx-auto flex justify-between">
+            <button class="flex flex-col items-center py-2 px-4 text-appBlue">
+                <span class="text-xs mt-1">Home</span>
+            </button>
+            <button class="flex flex-col items-center py-2 px-4 text-appGray">
+                <span class="text-xs mt-1">Alerts</span>
+            </button>
+            <button class="flex flex-col items-center py-2 px-4 text-appGray">
+                <span class="text-xs mt-1">Map</span>
+            </button>
+            <button class="flex flex-col items-center py-2 px-4 text-appGray">
+                <span class="text-xs mt-1">Profile</span>
+            </button>
+            <button class="flex flex-col items-center py-2 px-4 text-appGray">
+                <span class="text-xs mt-1">Settings</span>
+            </button>
+        </div>
+    </div>
+</body>
+</html>
