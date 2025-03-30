@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= event.title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+        <!-- Event Title -->
+        <h1 class="text-2xl font-bold text-gray-800"><%= event.title %></h1>
+        
+        <!-- Date & Time -->
+        <p class="text-gray-600 mt-2"><strong>Date & Time:</strong> <%= event.date %> at <%= event.time %></p>
+        
+        <!-- Description -->
+        <p class="text-gray-700 mt-4"><strong>Description:</strong> <%= event.description %></p>
+        
+        <!-- Buttons for Attending/Not Attending -->
+        <div class="mt-6 flex space-x-4">
+            <form action="/events/<%= event._id %>/attend" method="POST">
+                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg shadow hover:bg-green-600">Attending</button>
+            </form>
+            <form action="/events/<%= event._id %>/not-attending" method="POST">
+                <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600">Not Attending</button>
+            </form>
+        </div>
+
+        <!-- Attendees List -->
+        <h3 class="text-lg font-semibold mt-6 text-gray-800">Attendees:</h3>
+        <ul class="mt-2 space-y-2">
+            <% if (attendees.length > 0) { %>
+                <% attendees.forEach(attendee => { %>
+                    <li class="bg-gray-200 px-4 py-2 rounded-lg"><%= attendee.name %></li>
+                <% }) %>
+            <% } else { %>
+                <p class="text-gray-500">No attendees yet.</p>
+            <% } %>
+        </ul>
+    </div>
+</body>
+</html>

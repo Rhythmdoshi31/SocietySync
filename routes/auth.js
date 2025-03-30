@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Resident = require("../models/residentModel");
 const authMiddleware = require("../middleware/authMiddleware");
+const uncapitalize = require("../utils/uncapitalize");
 
 // Middleware to check authentication
 router.get("/profile", authMiddleware, async (req, res) => {
@@ -21,25 +22,31 @@ router.get("/profile", authMiddleware, async (req, res) => {
 // Handle Resident Registration
 router.post("/register", async (req, res) => {
     try {
-        const { name, email, password, mobile, role, roomNo, society } = req.body;
+        console.log("Incoming request body:", req.body);
 
-        // Check if resident already exists
+        let { name, email, password, mobile, role, roomNo } = req.body;
+        role = uncapitalize(role);
+        if (!name || !email || !password || !mobile || !role || !roomNo) {
+            return res.status(400).send("Missing required fields");
+        }
+
         const existingResident = await Resident.findOne({ email });
         if (existingResident) {
             return res.status(400).send("Resident already exists");
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newResident = new Resident({ name, email, password: hashedPassword, mobile, role, roomNo, society });
+        const newResident = new Resident({ name, email, password: hashedPassword, mobile, role, roomNo });
         await newResident.save();
 
         console.log("✅ Resident registered successfully");
-        res.redirect("/"); // Redirect to Home Page
+        res.redirect("/");
     } catch (error) {
         console.error("Registration error:", error);
         res.status(500).send("Error registering resident");
     }
 });
+
 router.get("/register", (req, res) => {
     res.render("register"); // Ensure you have a 'register.ejs' file in your views folder
 });
@@ -52,8 +59,11 @@ router.get("/login", (req, res) => {
 // Handle Resident Login
 router.post("/login", async (req, res) => {
     try {
-        const { email, password } = req.body;
-        const resident = await Resident.findOne({ email });
+        const { identifier, password } = req.body;
+
+        const query = identifier.includes('@') ? {email : identifier} : {roomNo: identifier};
+        
+        const resident = await Resident.findOne(query);
 
         if (!resident || !(await bcrypt.compare(password, resident.password))) {
             return res.status(400).send("Invalid credentials");

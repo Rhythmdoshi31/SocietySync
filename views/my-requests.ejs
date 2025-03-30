@@ -64,7 +64,8 @@
         <% } else { %>
             <% requests.forEach(req => { %>
                 <div class="bg-white p-4 rounded-lg shadow-md mb-4">
-                    <h3 class="font-semibold text-appText"><%= req.category %></h3>
+                    <div>
+                      <h3 class="font-semibold text-appText"><%= req.category %></h3>
                     <p class="text-appGray"><%= req.description %></p>
                     <p class="text-sm mt-2">
                         <strong>Status:</strong>
@@ -72,6 +73,10 @@
                             <%= req.status %>
                         </span>
                     </p>
+                    </div>
+                    <div>
+                    <%= if (!req.image) req.image%>
+                    </div>
                 </div>
             <% }) %>
         <% } %>
