@@ -50,7 +50,7 @@ const WorkerDashBoard = () => {
   const handleCompletion = async (id) => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.patch(`https://societysync-production.up.railway.app/api/services/${id}`, {}, {
+      await axios.patch(`https://societysync-production.up.railway.app/api/services/${id}`, {}, {
         headers: { 
           Authorization: `Bearer ${token}`,
          "Content-Type": "application/json", },

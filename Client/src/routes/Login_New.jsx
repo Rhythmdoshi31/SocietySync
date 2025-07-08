@@ -37,14 +37,14 @@ const Login = () => {
   };
 
   return (
-    <div className="relative">
-      <div className="flex items-center justify-center h-screen w-screen bg-neutral-950 overfow-hidden">
-        <div className="border-2 border-transparent p-1 rounded-xl animate-slideIn">
-          <div className="bg-gray-200 p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent mb-6 text-center animate-pulseText">
+    <div className="relative min-h-[100svh] min-w-[100svw] flex flex-col justify-center items-center overflow-x-hidden bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950">
+      <div className="flex items-center justify-center min-h-[90svh] w-full overflow-hidden px-2">
+        <div className="border-2 border-neutral-800 p-1 rounded-2xl animate-slideIn w-full max-w-md mx-auto shadow-xl bg-neutral-900/90">
+          <div className="p-6 sm:p-8 rounded-2xl w-full">
+            <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-6 text-center animate-pulseText">
               {isLogin ? 'Login to SocietySync' : 'Register for SocietySync'}
             </h2>
-            <form onSubmit={handleSubmit} className="min-h-[30vh] w-96 space-y-4">
+            <form onSubmit={handleSubmit} className="min-h-[30svh] w-full space-y-4">
               {!isLogin && (
                 <>
                   <div>
@@ -114,20 +114,21 @@ const Login = () => {
                 {isLogin ? 'Need to register?' : 'Already have an account?'}
               </p>
             </form>
-            <div className='flex gap-4 justify-center items-center mt-4'>
-              <h1 onClick={() => navigate("/login/admin")} className='text-blue-600 cursor-pointer hover:text-blue-700 underline'>Are you an Admin?</h1>
-              <h1 onClick={() => navigate("/login/worker")} className='text-blue-600 hover:text-blue-700 underline'>Are you a Worker?</h1>
+            <div className='flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center items-center mt-4'>
+              <h1 onClick={() => navigate("/login/admin")} className='text-blue-400 cursor-pointer hover:text-blue-500 underline'>Are you an Admin?</h1>
+              <h1 onClick={() => navigate("/login/worker")} className='text-blue-400 hover:text-blue-500 underline'>Are you a Worker?</h1>
             </div>
           </div>
         </div>
       </div>
-      <div className='absolute bottom-[7%] left-[50%] translate-x-[-50%] text-center'>
-        <h1 className='text-xl text-white mb-2 text-gray-100'>First time here?</h1>
-        <button onClick={() => navigate('/discover')} className='bg-gray-100 whitespace-nowrap hover:bg-gray-200 transition-colors rounded-xl px-4 py-2 text-[22px] md:text-[18px] font-semibold shadow-md hover:bg-gray-300 shadow-lg shadow-black'>
-          Discover SocietySync
-        </button>
-      </div>
-
+      {isLogin && (
+        <div className='absolute bottom-[7%] left-1/2 -translate-x-1/2 text-center w-full px-2'>
+          <h1 className='text-lg sm:text-xl text-gray-200 mb-2'>First time here?</h1>
+          <button onClick={() => navigate('/discover')} className='bg-neutral-800 text-blue-200 whitespace-nowrap hover:bg-neutral-700 transition-colors rounded-xl px-4 py-2 text-lg sm:text-[22px] md:text-[18px] font-semibold shadow-md hover:bg-gray-800 shadow-lg shadow-black'>
+            Discover SocietySync
+          </button>
+        </div>
+      )}
     </div>
   );
 };
