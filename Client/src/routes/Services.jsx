@@ -16,7 +16,7 @@ const Services = () => {
     const fetchServices = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get(`https://societysync-production.up.railway.app/api/services`, {
+        const response = await axios.get(`https://${import.meta.env.VITE_BACKEND_URL}/api/services`, {
           headers: { Authorization: `Bearer ${token}` },
           params: { page: 1, limit: 10 },
         });
@@ -61,12 +61,12 @@ const Services = () => {
 
     try {
       if (modalMode === 'create') {
-        await axios.post(`https://societysync-production.up.railway.app/api/services/create`, formData, {
+        await axios.post(`https://${import.meta.env.VITE_BACKEND_URL}/api/services/create`, formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } else if (modalMode === 'edit') {
         await axios.put(
-          `https://societysync-production.up.railway.app/api/services/${selectedServiceId}`,
+          `https://${import.meta.env.VITE_BACKEND_URL}/api/services/${selectedServiceId}`,
           formData,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -83,7 +83,7 @@ const Services = () => {
   const handleDelete = async () => {
     const token = localStorage.getItem('token');
     try {
-      await axios.delete(`https://societysync-production.up.railway.app/api/services/${selectedServiceId}`, {
+      await axios.delete(`https://${import.meta.env.VITE_BACKEND_URL}/api/services/${selectedServiceId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       closeModal();
