@@ -6,7 +6,7 @@ Choose from our flexible pricing models designed for societies of all sizes.
 
 ## 🔗 Live Demo
 
-- https://society-sync-neon.vercel.app/dashboard
+https://societysync.rhythmdoshi.site
 
 *Note: For demo access, please use the following credentials:*
 - **Admin**: hiro@shi.ma / nagasaki
