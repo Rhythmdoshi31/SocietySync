@@ -6,7 +6,8 @@ Choose from our flexible pricing models designed for societies of all sizes.
 
 ## 🔗 Live Demo
 
-https://societysync.rhythmdoshi.site
+- [https://societysync.rhythmdoshi.site](https://societysync.rhythmdoshi.site)
+- [https://rhythmdoshi.site/project/societysync](https://rhythmdoshi.site/project/societysync)
 
 *Note: For demo access, please use the following credentials:*
 - **Admin**: hiro@shi.ma / nagasaki
