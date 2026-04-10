@@ -20,7 +20,7 @@ const WorkerDashBoard = () => {
           const parsedUser = JSON.parse(userData);
           setWorkerData(parsedUser);
 
-          const response = await axios.get('http://localhost:3000/api/services', {
+          const response = await axios.get(`https://${import.meta.env.VITE_BACKEND_URL}/api/services`, {
             headers: { Authorization: `Bearer ${token}` },
             params: { page: 1, limit: 10 },
           });
@@ -50,7 +50,7 @@ const WorkerDashBoard = () => {
   const handleCompletion = async (id) => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.patch(`http://localhost:3000/api/services/${id}`, {}, {
+      await axios.patch(`https://${import.meta.env.VITE_BACKEND_URL}/api/services/${id}`, {}, {
         headers: { 
           Authorization: `Bearer ${token}`,
          "Content-Type": "application/json", },

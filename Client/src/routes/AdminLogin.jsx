@@ -26,12 +26,9 @@ const Login = () => {
     setErrorMessage(null);
 
     try {
-      const res = await axios.post(
-        'http://localhost:3000/api/auth/login/admin',
-        form,
-        { withCredentials: true }
-      );
-
+      const res = await axios.post(`https://${import.meta.env.VITE_BACKEND_URL}/api/auth/login/admin`, form, {
+        withCredentials: true,
+      });
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('admin', JSON.stringify(res.data.user));
 
@@ -50,7 +47,7 @@ const Login = () => {
       }
 
       try {
-        const res = await axios.get('http://localhost:3000/api/auth/me', {
+        const res = await axios.get(`https://${import.meta.env.VITE_BACKEND_URL}/api/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });

@@ -167,7 +167,8 @@ const DashboardContent = () => {
           <h2 className="text-3xl md:text-3xl font-bold bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent animate-pulseText">
           {`Hi ${
             (() => {
-              const firstName = dashboardData.name.trim().split(' ')[0];
+              const name = typeof dashboardData.name === 'string' ? dashboardData.name : '';
+              const firstName = name.trim() ? name.trim().split(' ')[0] : 'User';
               const formatted = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
               return formatted.length > 12 ? formatted.slice(0, 9) + '...' : formatted;
             })()
