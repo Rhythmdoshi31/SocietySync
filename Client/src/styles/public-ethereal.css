@@ -1,0 +1,63 @@
+/* Scoped to public marketing shell only — imported from PublicLayout */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600&display=swap');
+
+.public-ethereal {
+  --ethereal-fg: #e8e6e3;
+  --ethereal-fg-muted: #8a8884;
+  --ethereal-border: rgba(255, 255, 255, 0.06);
+  --ethereal-glow: rgba(200, 198, 190, 0.08);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  color: var(--ethereal-fg);
+  background-color: #050506;
+}
+
+.public-ethereal .font-display {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+@keyframes ethereal-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translate(2%, -1%) scale(1.02);
+    opacity: 0.55;
+  }
+}
+
+@keyframes ethereal-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.public-ethereal .animate-ethereal-fade-up {
+  animation: ethereal-fade-up 0.9s ease-out both;
+}
+
+.public-ethereal .animate-ethereal-drift {
+  animation: ethereal-drift 18s ease-in-out infinite;
+}
+
+.public-ethereal .noise-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.public-ethereal .orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}

@@ -41,7 +41,7 @@ const DashboardContent = () => {
       title: 'Events',
       description: 'View upcoming events',
       bg: 'bg-gradient-to-br from-blue-500 to-cyan-600',
-      href: '/events',
+      href: '/dashboard/events',
       image: 'https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_1280.jpg',
       icon: (
         <svg className="w-8 h-8 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -53,7 +53,7 @@ const DashboardContent = () => {
       title: 'Complaints',
       description: 'Submit or track complaints',
       bg: 'bg-gradient-to-br from-pink-500 to-purple-600',
-      href: '/complaints',
+      href: '/dashboard/complaints',
       image: 'https://cdn.pixabay.com/photo/2019/08/13/08/15/adult-4402808_1280.jpg',
       icon: (
         <svg className="w-8 h-8 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -65,7 +65,7 @@ const DashboardContent = () => {
       title: 'Ordering',
       description: 'Online grocery ordering',
       bg: 'bg-gradient-to-br from-amber-500 to-red-600',
-      href: '/ordering',
+      href: '/dashboard/ordering',
       image: 'https://cdn.pixabay.com/photo/2022/01/28/12/17/delivery-6974508_1280.jpg',
       icon: (
         <svg className="w-8 h-8 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -77,7 +77,7 @@ const DashboardContent = () => {
       title: 'Services',
       description: 'Request maintenance',
       bg: 'bg-gradient-to-br from-emerald-500 to-green-600',
-      href: '/services',
+      href: '/dashboard/services',
       image: 'https://cdn.pixabay.com/photo/2021/02/02/12/41/iron-5973861_1280.jpg',
       icon: (
         <svg className="w-8 h-8 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -90,7 +90,7 @@ const DashboardContent = () => {
       description: 'Manage rent and maintenance',
     
       bg: 'bg-gradient-to-br from-emerald-500 to-green-600',
-      href: '/rent-maintenance',
+      href: '/dashboard/rent-maintenance',
       image: 'https://images.unsplash.com/photo-1615404420216-cc423164563f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       icon: (
         <svg className="w-8 h-8 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -103,7 +103,7 @@ const DashboardContent = () => {
       description: 'View Live Security Cams',
     
       bg: 'bg-gradient-to-br from-emerald-500 to-green-600',
-      href: '/security-cams',
+      href: '/dashboard/security-cams',
       image: 'https://images.unsplash.com/photo-1590613607026-15c463e30ca5?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       icon: (
         <svg className="w-8 h-8 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -116,7 +116,7 @@ const DashboardContent = () => {
       description: 'Validate Visitors & Delivery Boys',
     
       bg: 'bg-gradient-to-br from-emerald-500 to-green-600',
-      href: '/visitor-delivery',
+      href: '/dashboard/visitor-delivery',
       image: 'https://images.unsplash.com/photo-1609143739217-01b60dad1c67?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       icon: (
         <svg className="w-8 h-8 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -174,7 +174,7 @@ const DashboardContent = () => {
           }, ${dashboardData.houseNo}`}
           </h2>
           <div 
-            onClick={() => navigate("/emergency")}
+            onClick={() => navigate("/dashboard/emergency")}
             className='bg-red-500 hover:bg-red-700 rounded-[50%] p-3 text-white'>
               <Siren />
           </div>
