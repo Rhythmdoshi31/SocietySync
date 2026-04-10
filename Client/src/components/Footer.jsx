@@ -1,14 +1,13 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Twitter } from 'lucide-react';
 
 const Footer = () => {
-  const navigate = useNavigate();
   const quickLinks = [
-    { label: 'Dashboard', href: 'dashboard' },
-    { label: 'Events', href: 'events' },
-    { label: 'Complaints', href: 'complaints' },
-    { label: 'Services', href: 'services' },
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Events', href: '/dashboard/events' },
+    { label: 'Complaints', href: '/dashboard/complaints' },
+    { label: 'Services', href: '/dashboard/services' },
   ];
 
   const policyLinks = [
@@ -31,12 +30,12 @@ const Footer = () => {
           <ul className="mt-2 space-y-1 flex items-center justify-center gap-4 underline md:no-underline">
             {quickLinks.map((link) => (
               <li key={link.label}>
-                <a
-                  href={link.href}
+                <Link
+                  to={link.href}
                   className="text-sm text-gray-600 hover:text-blue-600 hover:underline transition-colors duration-200"
                 >
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

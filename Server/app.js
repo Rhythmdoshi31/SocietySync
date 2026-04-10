@@ -38,6 +38,13 @@ app.use("/api/complaints", complaintRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/me", meRoutes);
 
+app.get('/api/debug/env', (req, res) => {
+  res.json({
+    jwt: process.env.JWT_SECRET ? "exists" : "missing",
+    port: process.env.PORT || "no port",
+  });
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
