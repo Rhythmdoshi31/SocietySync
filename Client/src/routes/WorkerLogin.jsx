@@ -48,7 +48,7 @@ const Login = () => {
       }
 
       try {
-        const res = await axios.get(`https://${import.meta.env.VITE_BACKEND_URL}/api/auth/me`, {
+        const res = await axios.get(`http://${import.meta.env.VITE_BACKEND_URL}/api/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });

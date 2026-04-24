@@ -1,5 +1,10 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import Section from '../components/ui/Section';
+import Card from '../components/ui/Card';
+import Button from '../components/ui/Button';
+import Badge from '../components/ui/Badge';
+import { Calendar as CalendarIcon, MapPin, Plus, Pencil, Trash2, X, Clock } from 'lucide-react';
 
 const Events = () => {
   const isAdmin = localStorage.getItem('admin') && localStorage.getItem('token');
@@ -18,7 +23,7 @@ const Events = () => {
     const fetchEvents = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get(`https://${import.meta.env.VITE_BACKEND_URL}/api/events`, {
+        const response = await axios.get(`http://${import.meta.env.VITE_BACKEND_URL}/api/events`, {
           headers: { Authorization: `Bearer ${token}` },
           params: { page: 1, limit: 10 },
         });
@@ -62,11 +67,11 @@ const Events = () => {
     const token = localStorage.getItem('token');
     try {
       if (modalMode === 'create') {
-        await axios.post(`https://${import.meta.env.VITE_BACKEND_URL}/api/events/create`, formData, {
+        await axios.post(`http://${import.meta.env.VITE_BACKEND_URL}/api/events/create`, formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } else if (modalMode === 'edit') {
-        await axios.put(`https://${import.meta.env.VITE_BACKEND_URL}/api/events/${selectedEvent._id}`, formData, {
+        await axios.put(`http://${import.meta.env.VITE_BACKEND_URL}/api/events/${selectedEvent._id}`, formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
@@ -80,7 +85,7 @@ const Events = () => {
   const handleDelete = async () => {
     const token = localStorage.getItem('token');
     try {
-      await axios.delete(`https://${import.meta.env.VITE_BACKEND_URL}/api/events/${selectedEvent._id}`, {
+      await axios.delete(`http://${import.meta.env.VITE_BACKEND_URL}/api/events/${selectedEvent._id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       closeModal();
@@ -91,177 +96,166 @@ const Events = () => {
   };
 
   return (
-    <div className="w-full md:w-4/5 p-6 md:p-8 relative animate-gradientFade">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <div>
-          <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent">
-            Society Events
-          </h2>
-          <p className="text-md bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent mt-2 animate-slideIn">
-            View and manage upcoming community <br />events with excitement.
-          </p>
+    <div className="pb-20">
+      <Section
+        eyebrow="COMMUNITY GATHERINGS"
+        title={<>SOCIETY<br /><span className="text-brand-orange">EVENTS</span></>}
+        subtitle="Stay updated with the latest happenings in our community. From festivals to meetings, find it all here."
+      >
+        <div className="flex justify-end mb-12">
+          {isAdmin && (
+            <Button variant="brand" className="gap-2" onClick={() => openModal('create')}>
+              <Plus className="w-4 h-4" />
+              CREATE EVENT
+            </Button>
+          )}
         </div>
-        <button
-          onClick={() => openModal('create')}
-          className={`${isAdmin || "hidden"} mt-4 md:mt-0 bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-5 py-2 rounded-lg text-sm font-medium flex items-center justify-center space-x-2 transition-colors duration-200 ${
-            isAdmin ? '' : 'opacity-50 cursor-not-allowed'
-          }`}
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-          </svg>
-          <span>Create Event</span>
-        </button>
-      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {events.map((event, index) => (
-          <div
-            key={event._id}
-            onClick={() => openModal('view', event)}
-            className="bg-gradient-to-r from-cyan-500 to-purple-500 text-white px-4 py-6 rounded-xl transition-colors duration-300 cursor-pointer relative overflow-hidden"
-            style={{ animationDelay: `${index * 0.1}s` }}
-          >
-            <div className='w-fit'>
-              <h3 className="text-2xl font-semibold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
-                {event.title}
-              </h3>
-              <hr className='border-gray-200 mt-1'/>
-            </div>
-            <p className="text-lg mt-2">Venue: {event.venue}</p>
-            <p className="text-lg mt-1">Date: {event.date}</p>
-            {event.description && (
-              <p className="text-lg mt-1">
-                {event.description.slice(0, 70)}{event.description.length > 70 ? '...' : ''}
-              </p>
-            )}
-            {isAdmin && (
-              <div
-                className='mt-2 flex items-center justify-start gap-4'
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div
-                  onClick={() => openModal('edit', event)}
-                  className='py-1 px-3 text-black text-lg hover:bg-gray-200 bg-gray-100 shadow-xl rounded-xl cursor-pointer'
-                >
-                  ✏️ Edit
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {events.map((event) => (
+            <Card 
+              key={event._id} 
+              variant="white" 
+              className="group cursor-pointer hover:bg-mistral-black hover:text-white transition-all duration-500 border border-mistral-black/5 shadow-none flex flex-col h-full"
+              onClick={() => openModal('view', event)}
+            >
+              <div className="flex justify-between items-start mb-8">
+                <div className="p-3 bg-mistral-black/5 group-hover:bg-white/10 transition-colors">
+                  <CalendarIcon className="w-5 h-5 text-mistral-black group-hover:text-white" />
                 </div>
-                <div
-                  onClick={() => openModal('delete', event)}
-                  className='py-1 px-3 text-black text-lg hover:bg-gray-200 bg-gray-100 shadow-xl rounded-xl cursor-pointer'
-                >
-                  ❌ Delete
+                <Badge variant="outline" className="group-hover:border-white/20 group-hover:text-white">UPCOMING</Badge>
+              </div>
+
+              <h3 className="text-2xl font-normal tracking-tight mb-4 uppercase leading-tight">{event.title}</h3>
+              
+              <div className="space-y-2 mb-8 flex-1">
+                <div className="flex items-center gap-2 text-xs tracking-widest text-mistral-black/40 group-hover:text-white/40">
+                  <Clock className="w-3 h-3" />
+                  {event.date.toUpperCase()}
+                </div>
+                <div className="flex items-center gap-2 text-xs tracking-widest text-mistral-black/40 group-hover:text-white/40">
+                  <MapPin className="w-3 h-3" />
+                  {event.venue.toUpperCase()}
                 </div>
               </div>
-            )}
-          </div>
-        ))}
-      </div>
 
-      {isModalVisible && selectedEvent && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="border-2 border-transparent bg-gradient-to-r from-cyan-500 to-purple-500 p-1 rounded-lg animate-slideIn">
-            <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
-              {modalMode === 'delete' ? (
-                <>
-                  <h3 className="text-xl font-semibold text-gray-800 text-center">Confirm Delete</h3>
-                  <p className="text-sm text-center text-gray-600 mt-4">
-                    Are you sure you want to delete this event?
-                  </p>
-                  <div className="flex mt-6 gap-4 justify-center">
-                    <button
-                      onClick={handleDelete}
-                      className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm"
-                    >
-                      Yes, Delete
-                    </button>
-                    <button
-                      onClick={closeModal}
-                      className="bg-gray-300 text-black px-4 py-2 rounded-lg text-sm"
-                    >
-                      Cancel
-                    </button>
+              {isAdmin && (
+                <div className="flex gap-2 pt-6 border-t border-mistral-black/5 group-hover:border-white/10" onClick={(e) => e.stopPropagation()}>
+                  <Button variant="outline" className="flex-1 py-2 text-[10px] group-hover:bg-white/10 group-hover:text-white group-hover:border-transparent" onClick={() => openModal('edit', event)}>
+                    <Pencil className="w-3 h-3 mr-2" />
+                    EDIT
+                  </Button>
+                  <Button variant="ghost" className="flex-1 py-2 text-[10px] text-brand-orange group-hover:bg-brand-orange/20" onClick={() => openModal('delete', event)}>
+                    <Trash2 className="w-3 h-3 mr-2" />
+                    DELETE
+                  </Button>
+                </div>
+              )}
+            </Card>
+          ))}
+        </div>
+      </Section>
+
+      {isModalVisible && (
+        <div className="fixed inset-0 bg-mistral-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-6">
+          <Card variant="white" className="max-w-md w-full relative">
+            <button onClick={closeModal} className="absolute top-6 right-6 p-2 hover:bg-mistral-black/5 transition-colors">
+              <X className="w-5 h-5 text-mistral-black" />
+            </button>
+
+            {modalMode === 'delete' ? (
+              <div className="py-4 text-center">
+                <div className="w-16 h-16 bg-brand-orange/10 flex items-center justify-center mx-auto mb-6">
+                  <Trash2 className="w-8 h-8 text-brand-orange" />
+                </div>
+                <h3 className="text-2xl font-normal tracking-tight mb-2 uppercase">CANCEL EVENT</h3>
+                <p className="text-sm text-mistral-black/50 mb-10">Are you sure you want to cancel and remove this event?</p>
+                <div className="flex gap-4">
+                  <Button variant="outline" className="flex-1" onClick={closeModal}>BACK</Button>
+                  <Button variant="brand" className="flex-1" onClick={handleDelete}>DELETE</Button>
+                </div>
+              </div>
+            ) : modalMode === 'view' ? (
+              <div className="py-4">
+                <Badge variant="brand" className="mb-4">EVENT DETAILS</Badge>
+                <h3 className="text-3xl font-normal tracking-tight mb-6 uppercase leading-tight">{selectedEvent.title}</h3>
+                <div className="grid grid-cols-2 gap-4 mb-8">
+                  <div className="p-4 bg-warm-ivory border border-mistral-black/5">
+                    <p className="text-[10px] tracking-widest text-mistral-black/40 mb-1 uppercase">DATE</p>
+                    <p className="text-xs font-normal uppercase tracking-tight">{selectedEvent.date}</p>
                   </div>
-                </>
-              ) : modalMode === 'view' ? (
-                <>
-                  <h3 className="text-2xl font-bold text-center text-gray-800">{selectedEvent.title}</h3>
-                  <p className="mt-2 text-center text-gray-600">{selectedEvent.date} | {selectedEvent.venue}</p>
-                  <hr className="my-4" />
-                  <p className="text-gray-700 whitespace-pre-line">{selectedEvent.description}</p>
-                  <button
-                    onClick={closeModal}
-                    className="mt-6 w-full bg-gradient-to-r from-red-600 to-rose-600 text-white px-4 py-2 rounded-lg text-sm"
-                  >
-                    Close
-                  </button>
-                </>
-              ) : (
-                <>
-                  <h3 className="text-2xl font-semibold text-gray-800 text-center">
-                    {modalMode === 'create' ? 'Create an Event' : 'Edit Event'}
-                  </h3>
-                  <form onSubmit={handleFormSubmit} className="space-y-4 mt-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Event Title</label>
-                      <input
-                        type="text"
-                        name="title"
-                        value={formData.title}
-                        onChange={handleFormChange}
-                        required
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-lg text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Description</label>
-                      <textarea
-                        name="description"
-                        value={formData.description}
-                        onChange={handleFormChange}
-                        rows="4"
-                        required
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-lg text-sm"
-                      ></textarea>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Date</label>
+                  <div className="p-4 bg-warm-ivory border border-mistral-black/5">
+                    <p className="text-[10px] tracking-widest text-mistral-black/40 mb-1 uppercase">VENUE</p>
+                    <p className="text-xs font-normal uppercase tracking-tight">{selectedEvent.venue}</p>
+                  </div>
+                </div>
+                <div className="mb-10">
+                  <p className="text-[10px] tracking-widest text-mistral-black/40 mb-3 uppercase">ABOUT THE EVENT</p>
+                  <p className="text-sm text-mistral-black/70 leading-relaxed whitespace-pre-line">
+                    {selectedEvent.description}
+                  </p>
+                </div>
+                <Button variant="primary" className="w-full py-4" onClick={closeModal}>CLOSE</Button>
+              </div>
+            ) : (
+              <div className="py-4">
+                <h3 className="text-2xl font-normal tracking-tight mb-8 uppercase">
+                  {modalMode === 'create' ? 'CREATE EVENT' : 'EDIT EVENT'}
+                </h3>
+                <form onSubmit={handleFormSubmit} className="space-y-6">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-normal uppercase tracking-wider text-mistral-black/50">TITLE</label>
+                    <input
+                      type="text"
+                      name="title"
+                      value={formData.title}
+                      onChange={handleFormChange}
+                      required
+                      className="bg-warm-ivory border border-mistral-black/10 px-4 py-3 text-sm focus:outline-none focus:border-brand-orange transition-colors"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-normal uppercase tracking-wider text-mistral-black/50">DESCRIPTION</label>
+                    <textarea
+                      name="description"
+                      value={formData.description}
+                      onChange={handleFormChange}
+                      rows="3"
+                      required
+                      className="bg-warm-ivory border border-mistral-black/10 px-4 py-3 text-sm focus:outline-none focus:border-brand-orange transition-colors resize-none"
+                    ></textarea>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-normal uppercase tracking-wider text-mistral-black/50">DATE</label>
                       <input
                         type="date"
                         name="date"
                         value={formData.date}
                         onChange={handleFormChange}
                         required
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-lg text-sm"
+                        className="bg-warm-ivory border border-mistral-black/10 px-4 py-3 text-sm focus:outline-none focus:border-brand-orange transition-colors"
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Venue</label>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-normal uppercase tracking-wider text-mistral-black/50">VENUE</label>
                       <input
                         type="text"
                         name="venue"
                         value={formData.venue}
                         onChange={handleFormChange}
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-lg text-sm"
+                        required
+                        className="bg-warm-ivory border border-mistral-black/10 px-4 py-3 text-sm focus:outline-none focus:border-brand-orange transition-colors"
                       />
                     </div>
-                    <button
-                      type="submit"
-                      className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white py-2 px-4 rounded-lg font-semibold"
-                    >
-                      {modalMode === 'create' ? 'Create Event' : 'Update Event'}
-                    </button>
-                  </form>
-                  <button
-                    onClick={closeModal}
-                    className="mt-4 w-full bg-gradient-to-r from-red-600 to-rose-600 text-white px-4 py-2 rounded-lg text-sm"
-                  >
-                    Close
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
+                  </div>
+                  <Button type="submit" variant="brand" className="w-full py-4 mt-4">
+                    {modalMode === 'create' ? 'POST EVENT' : 'SAVE CHANGES'}
+                  </Button>
+                </form>
+              </div>
+            )}
+          </Card>
         </div>
       )}
     </div>

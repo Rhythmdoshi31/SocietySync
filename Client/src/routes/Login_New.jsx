@@ -44,7 +44,7 @@ const Login = ({ setUser }) => {
     setIsSubmitting(true);
 
     try {
-      const res = await axios.post(`https://${import.meta.env.VITE_BACKEND_URL}/api/auth${endpoint}`, form, {
+      const res = await axios.post(`http://${import.meta.env.VITE_BACKEND_URL}/api/auth${endpoint}`, form, {
         withCredentials: true,
       });
 

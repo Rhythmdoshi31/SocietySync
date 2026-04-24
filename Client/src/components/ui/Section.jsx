@@ -1,30 +1,28 @@
 import React from 'react';
 
-const Section = ({ eyebrow, title, subtitle, className = '', contentClassName = '', children, tone = 'light' }) => {
-  const isDark = tone === 'ethereal';
-  const hasHeader = Boolean(eyebrow || title || subtitle);
+const Section = ({ eyebrow, title, subtitle, className = '', contentClassName = '', children }) => {
   return (
-    <section className={`mx-auto w-full max-w-6xl px-6 py-20 md:px-8 ${className}`}>
-      {eyebrow ? (
-        <p
-          className={`text-[0.65rem] font-medium uppercase tracking-[0.35em] ${isDark ? 'text-[#6b6965]' : 'text-indigo-600'}`}
-        >
-          {eyebrow}
-        </p>
-      ) : null}
-      {title ? (
-        <h2
-          className={`mt-4 max-w-3xl text-3xl font-normal tracking-tight md:text-4xl ${isDark ? 'font-display text-[#f5f3f0]' : 'font-bold text-slate-900'}`}
-        >
-          {title}
-        </h2>
-      ) : null}
-      {subtitle ? (
-        <p className={`mt-5 max-w-2xl text-base leading-relaxed ${isDark ? 'text-[#8a8884]' : 'text-slate-600'}`}>
-          {subtitle}
-        </p>
-      ) : null}
-      <div className={`${hasHeader ? 'mt-12' : 'mt-0'} ${contentClassName}`}>{children}</div>
+    <section className={`w-full max-w-7xl mx-auto px-6 py-24 md:px-12 ${className}`}>
+      <div className="max-w-4xl">
+        {eyebrow && (
+          <p className="text-xs font-normal uppercase tracking-[0.2em] text-brand-orange mb-6">
+            {eyebrow}
+          </p>
+        )}
+        {title && (
+          <h2 className="text-5xl md:text-6xl font-normal tracking-tighter text-mistral-black mb-8 leading-[0.95]">
+            {title}
+          </h2>
+        )}
+        {subtitle && (
+          <p className="text-xl text-mistral-black/70 max-w-2xl leading-relaxed mb-12">
+            {subtitle}
+          </p>
+        )}
+      </div>
+      <div className={`${contentClassName}`}>
+        {children}
+      </div>
     </section>
   );
 };

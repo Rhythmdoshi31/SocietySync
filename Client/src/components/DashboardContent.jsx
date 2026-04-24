@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Siren } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Siren, Calendar, AlertCircle, ShoppingBag, Wrench, CreditCard, Camera, UserCheck } from 'lucide-react';
+import Section from './ui/Section';
+import Card from './ui/Card';
+import Button from './ui/Button';
 
 const DashboardContent = () => {
   const [dashboardData, setDashboardData] = useState(null);
@@ -24,199 +27,72 @@ const DashboardContent = () => {
       }
     }
     if (adminData) setRole("admin");
-  }, []);
-  
+  }, [navigate]);
 
   const today = new Date();
-  const parts = today.toLocaleDateString('en-GB', {
+  const formattedDate = today.toLocaleDateString('en-GB', {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
     year: 'numeric'
-  }).split(" ");
-  const formattedDate = `${parts[0]}, ${parts.slice(1).join(' ')}`;  
+  }).toUpperCase();
 
   const cards = [
-    {
-      title: 'Events',
-      description: 'View upcoming events',
-      bg: 'bg-gradient-to-br from-blue-500 to-cyan-600',
-      href: '/dashboard/events',
-      image: 'https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_1280.jpg',
-      icon: (
-        <svg className="w-8 h-8 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-      )
-    },
-    {
-      title: 'Complaints',
-      description: 'Submit or track complaints',
-      bg: 'bg-gradient-to-br from-pink-500 to-purple-600',
-      href: '/dashboard/complaints',
-      image: 'https://cdn.pixabay.com/photo/2019/08/13/08/15/adult-4402808_1280.jpg',
-      icon: (
-        <svg className="w-8 h-8 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      )
-    },
-    {
-      title: 'Ordering',
-      description: 'Online grocery ordering',
-      bg: 'bg-gradient-to-br from-amber-500 to-red-600',
-      href: '/dashboard/ordering',
-      image: 'https://cdn.pixabay.com/photo/2022/01/28/12/17/delivery-6974508_1280.jpg',
-      icon: (
-        <svg className="w-8 h-8 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
-      )
-    },
-    {
-      title: 'Services',
-      description: 'Request maintenance',
-      bg: 'bg-gradient-to-br from-emerald-500 to-green-600',
-      href: '/dashboard/services',
-      image: 'https://cdn.pixabay.com/photo/2021/02/02/12/41/iron-5973861_1280.jpg',
-      icon: (
-        <svg className="w-8 h-8 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.79m0 0L21 21" />
-        </svg>
-      )
-    },
-    {
-      title: 'Rent & Maintenance',
-      description: 'Manage rent and maintenance',
-    
-      bg: 'bg-gradient-to-br from-emerald-500 to-green-600',
-      href: '/dashboard/rent-maintenance',
-      image: 'https://images.unsplash.com/photo-1615404420216-cc423164563f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      icon: (
-        <svg className="w-8 h-8 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.79m0 0L21 21" />
-        </svg>
-      )
-    },
-    {
-      title: 'Security Cams',
-      description: 'View Live Security Cams',
-    
-      bg: 'bg-gradient-to-br from-emerald-500 to-green-600',
-      href: '/dashboard/security-cams',
-      image: 'https://images.unsplash.com/photo-1590613607026-15c463e30ca5?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      icon: (
-        <svg className="w-8 h-8 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.79m0 0L21 21" />
-        </svg>
-      )
-    },
-    {
-      title: 'Visitor & Delivery',
-      description: 'Validate Visitors & Delivery Boys',
-    
-      bg: 'bg-gradient-to-br from-emerald-500 to-green-600',
-      href: '/dashboard/visitor-delivery',
-      image: 'https://images.unsplash.com/photo-1609143739217-01b60dad1c67?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      icon: (
-        <svg className="w-8 h-8 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.79m0 0L21 21" />
-        </svg>
-      )
-    },
-
+    { title: 'EVENTS', description: 'View upcoming community events', href: '/dashboard/events', icon: Calendar },
+    { title: 'COMPLAINTS', description: 'Submit or track your complaints', href: '/dashboard/complaints', icon: AlertCircle },
+    { title: 'ORDERING', description: 'Online grocery and essentials', href: '/dashboard/ordering', icon: ShoppingBag },
+    { title: 'SERVICES', description: 'Request home maintenance services', href: '/dashboard/services', icon: Wrench },
+    { title: 'MAINTENANCE', description: 'Manage rent and society dues', href: '/dashboard/rent-maintenance', icon: CreditCard },
+    { title: 'SECURITY', description: 'View live society security cams', href: '/dashboard/security-cams', icon: Camera },
+    { title: 'VISITORS', description: 'Validate visitors and deliveries', href: '/dashboard/visitor-delivery', icon: UserCheck },
   ];
 
+  if (!dashboardData) return null;
+
+  const firstName = (dashboardData.name || 'User').split(' ')[0].toUpperCase();
 
   return (
-    <>
-    { dashboardData ? 
-    <div className="w-full md:w-4/5 p-6 md:p-8 relative animate-gradientFade bg-neutral-950">
-    <style>
-      {`
-        @keyframes slideIn {
-          from { transform: translateY(-50px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes gradientFade {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        @keyframes pulseText {
-          0% { transform: scale(1); }
-          50% { transform: scale(1.05); }
-          100% { transform: scale(1); }
-        }
-        .animate-slideIn {
-          animation: slideIn 0.5s ease-out;
-        }
-        .animate-gradientFade {
-          background: linear-gradient(135deg, #e2e8f0, #f1f5f9, #e2e8f0);
-          background-size: 200% 200%;
-          animation: gradientFade 15s ease infinite;
-        }
-        .animate-pulseText:hover {
-          animation: pulseText 1s infinite;
-        }
-      `}
-    </style>
-    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-      <div>
-        <div className='flex items-center gap-4'>
-          <h2 className="text-3xl md:text-3xl font-bold bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent animate-pulseText">
-          {`Hi ${
-            (() => {
-              const name = typeof dashboardData.name === 'string' ? dashboardData.name : '';
-              const firstName = name.trim() ? name.trim().split(' ')[0] : 'User';
-              const formatted = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
-              return formatted.length > 12 ? formatted.slice(0, 9) + '...' : formatted;
-            })()
-          }, ${dashboardData.houseNo}`}
-          </h2>
-          <div 
+    <div className="pb-20">
+      <Section
+        eyebrow={formattedDate}
+        title={<>HI {firstName},<br /><span className="text-brand-orange">{dashboardData.houseNo}</span></>}
+        subtitle={role === "admin" ? "[ ADMINISTRATOR ACCESS ]" : "Welcome to your society dashboard. Manage your living experience with ease."}
+      >
+        <div className="flex gap-4 mb-16">
+          <Button 
+            variant="brand" 
+            className="gap-2"
             onClick={() => navigate("/dashboard/emergency")}
-            className='bg-red-500 hover:bg-red-700 rounded-[50%] p-3 text-white'>
-              <Siren />
-          </div>
+          >
+            <Siren className="w-4 h-4" />
+            EMERGENCY SOS
+          </Button>
         </div>
-        { role === "admin" && <span className='text-red-800 text-2xl font-semibold'>[ Admin ]</span>}
-        <p className="text-lg bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent animate-slideIn">
-          Today is {`${formattedDate}`}
-        </p>
-      </div>
-      
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {cards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <Card 
+                key={card.title} 
+                className="group cursor-pointer hover:bg-mistral-black hover:text-white transition-all duration-500"
+                onClick={() => navigate(card.href)}
+              >
+                <div className="flex justify-between items-start mb-12">
+                  <div className="p-3 bg-mistral-black/5 group-hover:bg-white/10 transition-colors">
+                    <Icon className="w-6 h-6 text-mistral-black group-hover:text-white" />
+                  </div>
+                </div>
+                <h3 className="text-3xl font-normal tracking-tight mb-2 uppercase">{card.title}</h3>
+                <p className="text-sm text-mistral-black/40 group-hover:text-white/40 uppercase tracking-widest">
+                  {card.description}
+                </p>
+              </Card>
+            );
+          })}
+        </div>
+      </Section>
     </div>
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {cards.map((card, index) => (
-        <Link
-          key={card.title}
-          to={card.href}
-          className={`${card.bg}/50 h-60 text-white p-6 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 hover:ring-2 hover:ring-cyan-300 transition-all duration-300 cursor-pointer bg-cover bg-center relative overflow-hidden animate-slideIn`}
-          onClick={card.onClick}
-          style={{ backgroundImage: `url(${card.image})`, animationDelay: `${index * 0.1}s` }}
-        >
-          <div className="absolute inset-0 bg-black/30 hover:bg-black/50 hover:backdrop-blur-md transition-all duration-300"></div>
-          <div className="absolute inset-0  duration-300"></div>
-          <div className="absolute top-4 left-4 ">{card.icon}</div>
-          <div className="relative z-10 mt-8">
-            <h3
-              className="text-3xl font-semibold hover:text-3xl hover:shadow-glow transition-all duration-300"
-            >
-              {card.title}
-            </h3>
-            <p
-              className="text-lg mt-1"
-              style={{ textShadow: '1px 1px 3px rgba(0, 0, 0, 0.7)' }}
-            >
-              {card.description}
-            </p>
-          </div>
-        </Link>
-      ))}
-    </div>
-  </div> : "Loading..."}
-    </>
   );
 };
 

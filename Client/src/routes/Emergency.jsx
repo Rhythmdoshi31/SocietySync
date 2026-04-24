@@ -1,103 +1,93 @@
 import React, { useState } from 'react';
+import Section from '../components/ui/Section';
+import Card from '../components/ui/Card';
+import Button from '../components/ui/Button';
+import { Siren, Phone, X, AlertTriangle } from 'lucide-react';
 
 const EmergencyPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleEmergencyClick = () => {
     try {
-      // Directly open the phone dialer for a normal call
-      window.location.href = 'tel:+99981603789'; // Replace with the desired phone number
+      window.location.href = 'tel:+99981603789'; 
     } catch (error) {
       console.error('Error triggering the emergency call:', error);
     }
     setIsModalVisible(true);
   };
   
-
   const closeModal = () => {
     setIsModalVisible(false);
   };
 
   return (
-    <div className="w-full md:w-4/5 h-[50vh] md:h-full p-6 md:p-8 relative animate-gradientFade">
-      <style>
-        {`
-          @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-          }
-          @keyframes gradientFade {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-          }
-          @keyframes pulseText {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-          }
-          @keyframes pulseButton {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-          }
-          @keyframes pulseIcon {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-          }
-          .animate-slideIn { animation: slideIn 0.3s ease-out; }
-          .animate-gradientFade {
-            background: linear-gradient(135deg, #e2e8f0, #f1f5f9, #e2e8f0);
-            background-size: 200% 200%;
-            animation: gradientFade 15s ease infinite;
-          }
-          .animate-pulseText:hover { animation: pulseText 1s infinite; }
-          .animate-pulseButton:hover { animation: pulseButton 0.8s infinite; }
-          .animate-pulseIcon { animation: pulseIcon 1.5s infinite; }
-        `}
-      </style>
-      <div className="flex flex-col justify-center  h-full items-center md:items-center mb-8 text-center">
-        <div>
-          <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent animate-pulseText">
-            Emergency Alert
-          </h2>
-          <p className="text-sm bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent mt-2 animate-slideIn">
-            Trigger emergency services or notify the management team.
-          </p>
+    <div className="pb-20">
+      <Section
+        eyebrow="CRITICAL ASSISTANCE"
+        title={<>EMERGENCY<br /><span className="text-brand-orange">SERVICES</span></>}
+        subtitle="Immediate assistance is just a click away. Connect with society security and medical services instantly."
+      >
+        <div className="max-w-3xl mx-auto text-center py-20">
+          <Card variant="ivory" className="relative p-12 md:p-20 flex flex-col items-center border border-brand-orange/20 overflow-hidden shadow-none">
+            {/* Ambient pulse effect behind the button */}
+            <div className="absolute inset-0 bg-brand-orange/5 animate-pulse"></div>
+            
+            <div className="relative z-10 w-24 h-24 bg-brand-orange/10 flex items-center justify-center mb-12">
+              <Siren className="w-12 h-12 text-brand-orange animate-bounce" />
+            </div>
+
+            <h3 className="relative z-10 text-4xl font-normal tracking-tight mb-6 uppercase">SOS EMERGENCY</h3>
+            <p className="relative z-10 text-sm text-mistral-black/50 mb-12 max-w-md uppercase tracking-widest leading-loose">
+              BY PRESSING THE BUTTON BELOW, YOU WILL IMMEDIATELY INITIATE A CALL TO SOCIETY SECURITY AND NOTIFY MANAGEMENT.
+            </p>
+
+            <Button 
+              variant="brand" 
+              className="relative z-10 w-full md:w-auto px-12 py-6 text-lg gap-3"
+              onClick={handleEmergencyClick}
+            >
+              <Phone className="w-5 h-5" />
+              TRIGGER EMERGENCY
+            </Button>
+          </Card>
+
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card variant="white" className="p-6 flex items-center gap-4 border border-mistral-black/5 text-left shadow-none">
+              <div className="p-3 bg-mistral-black/5"><Phone className="w-5 h-5" /></div>
+              <div>
+                <p className="text-[10px] tracking-widest text-mistral-black/40 uppercase">SECURITY GATE</p>
+                <p className="text-sm font-normal">+91 99981 60378</p>
+              </div>
+            </Card>
+            <Card variant="white" className="p-6 flex items-center gap-4 border border-mistral-black/5 text-left shadow-none">
+              <div className="p-3 bg-mistral-black/5"><Phone className="w-5 h-5" /></div>
+              <div>
+                <p className="text-[10px] tracking-widest text-mistral-black/40 uppercase">POLICE / AMBULANCE</p>
+                <p className="text-sm font-normal">100 / 108</p>
+              </div>
+            </Card>
+          </div>
         </div>
-        <button
-          onClick={handleEmergencyClick}
-          className="mt-4 bg-gradient-to-r from-red-600 to-rose-600 text-white px-6 py-3 rounded-lg text-sm font-semibold flex items-center justify-center space-x-2 animate-pulseButton hover:ring-2 hover:ring-cyan-300 hover:scale-105 transition-all duration-200"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span>Trigger Emergency</span>
-        </button>
-      </div>
+      </Section>
 
       {isModalVisible && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="border-2 border-transparent bg-gradient-to-r from-cyan-500 to-purple-500 p-1 rounded-lg animate-slideIn">
-            <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full mx-4 text-center">
-              <div className="flex items-center justify-center mb-4">
-                <svg className="w-8 h-8 text-red-600 animate-pulseIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <h3 className="text-xl font-bold text-red-600 ml-2">Emergency Triggered</h3>
+        <div className="fixed inset-0 bg-mistral-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-6">
+          <Card variant="white" className="max-w-md w-full relative border-t-4 border-brand-orange shadow-none">
+            <button onClick={closeModal} className="absolute top-6 right-6 p-2 hover:bg-mistral-black/5 transition-colors">
+              <X className="w-5 h-5 text-mistral-black" />
+            </button>
+
+            <div className="py-8 text-center">
+              <div className="w-20 h-20 bg-brand-orange/10 flex items-center justify-center mx-auto mb-8">
+                <AlertTriangle className="w-10 h-10 text-brand-orange" />
               </div>
-              <p className="text-sm text-gray-700 mt-4">
-                An emergency has been reported. Authorities or building management will be notified immediately.
+              <h3 className="text-2xl font-normal tracking-tight mb-4 uppercase">ALERT TRIGGERED</h3>
+              <p className="text-sm text-mistral-black/50 mb-10 leading-relaxed uppercase tracking-widest">
+                An emergency protocol has been initiated. <br />Authorities have been notified.
               </p>
-              <button
-                onClick={closeModal}
-                className="mt-6 bg-gradient-to-r from-red-600 to-rose-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:scale-105 hover:ring-2 hover:ring-cyan-300 transition-all duration-200 animate-pulseButton"
-              >
-                Close
-              </button>
+              <Button variant="primary" className="w-full py-4" onClick={closeModal}>CLOSE OVERLAY</Button>
             </div>
-          </div>
+          </Card>
         </div>
       )}
     </div>

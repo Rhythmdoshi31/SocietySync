@@ -1,12 +1,17 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import Section from '../components/ui/Section';
+import Card from '../components/ui/Card';
+import Button from '../components/ui/Button';
+import Badge from '../components/ui/Badge';
+import { Wrench, Calendar, Home, Tag, Pencil, Trash2, Plus, X, AlertCircle } from 'lucide-react';
 
 const Services = () => {
   const isAdmin = localStorage.getItem('admin') && localStorage.getItem('token');
   const [services, setServices] = useState([]);
   const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalMode, setModalMode] = useState('create'); // 'create', 'edit', 'delete'
+  const [modalMode, setModalMode] = useState('create'); 
   const [formData, setFormData] = useState({
     detail: '',
     category: '',
@@ -16,7 +21,7 @@ const Services = () => {
     const fetchServices = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get(`https://${import.meta.env.VITE_BACKEND_URL}/api/services`, {
+        const response = await axios.get(`http://${import.meta.env.VITE_BACKEND_URL}/api/services`, {
           headers: { Authorization: `Bearer ${token}` },
           params: { page: 1, limit: 10 },
         });
@@ -61,12 +66,12 @@ const Services = () => {
 
     try {
       if (modalMode === 'create') {
-        await axios.post(`https://${import.meta.env.VITE_BACKEND_URL}/api/services/create`, formData, {
+        await axios.post(`http://${import.meta.env.VITE_BACKEND_URL}/api/services/create`, formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } else if (modalMode === 'edit') {
         await axios.put(
-          `https://${import.meta.env.VITE_BACKEND_URL}/api/services/${selectedServiceId}`,
+          `http://${import.meta.env.VITE_BACKEND_URL}/api/services/${selectedServiceId}`,
           formData,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -83,7 +88,7 @@ const Services = () => {
   const handleDelete = async () => {
     const token = localStorage.getItem('token');
     try {
-      await axios.delete(`https://${import.meta.env.VITE_BACKEND_URL}/api/services/${selectedServiceId}`, {
+      await axios.delete(`http://${import.meta.env.VITE_BACKEND_URL}/api/services/${selectedServiceId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       closeModal();
@@ -94,141 +99,138 @@ const Services = () => {
   };
 
   return (
-    <div className="w-full md:w-4/5 p-6 md:p-8 relative animate-gradientFade">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <div>
-          <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent">
-            Service Dashboard
-          </h2>
-          <p className="text-lg bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent mt-2 animate-slideIn">
-            We're here top help! Request a Service.
-          </p>
+    <div className="pb-20">
+      <Section
+        eyebrow="MAINTENANCE & CARE"
+        title={<>SERVICE<br /><span className="text-brand-orange">DASHBOARD</span></>}
+        subtitle="Request specialized maintenance services or report infrastructure issues in your block."
+      >
+        <div className="flex justify-end mb-12">
+          {!isAdmin && (
+            <Button variant="brand" className="gap-2 px-8 py-4" onClick={() => openModal('create')}>
+              <Plus size={16} />
+              LODGE SERVICE REQUEST
+            </Button>
+          )}
         </div>
-        <button
-          onClick={() => openModal('create')}
-          className={`${isAdmin && "hidden"} mt-4 md:mt-0 bg-gradient-to-r from-red-600 to-pink-500 text-white px-5 py-2 rounded-lg text-sm font-medium flex items-center justify-center space-x-2 transition-colors duration-200`}
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-          </svg>
-          <span>Lodge Service Request</span>
-        </button>
-      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {services.map((service, index) => (
-          <div
-            key={service._id}
-            className="bg-gradient-to-r relative from-red-400 to-pink-500 text-white p-6 rounded-xl transition-colors duration-300 relative"
-            style={{ animationDelay: `${index * 0.1}s` }}
-          >
-            <h2 className={`absolute right-[5%] top-[7%] md:top-[4%] text-md md:text-sm capitalize ${service.status === "open" ? "text-green-300" : "text-yellow-300"}`}>· {service.status === "open" ? "In Queue" : "Completed"}</h2>
-            <div className='w-fit'>
-            <h3 className="text-xl">
-              {service.houseNo}, {new Date(service.request).toLocaleDateString('en-GB', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-              })}
-            </h3>
-            <hr className='border-gray-200 my-2'/>
-            </div>
-
-            <p className="text-xl mt-1">Category: {service.category}</p>
-            {service.detail && (
-              <p className="text-xl mt-2">
-                {service.detail.slice(0, 70)}{service.detail.length > 70 ? '...' : ''}
-              </p>
-            )}
-              <div className="mt-3 flex gap-4">
-                <div
-                  onClick={() => openModal('edit', service)}
-                  className="py-1 px-3 text-black text-lg hover:bg-gray-200 bg-gray-100 shadow-xl rounded-xl cursor-pointer"
-                >
-                  ✏️ Edit
-                </div>
-                <div
-                  onClick={() => openModal('delete', service)}
-                  className="py-1 px-3 text-black text-lg hover:bg-gray-200 bg-gray-100 shadow-xl rounded-xl cursor-pointer"
-                >
-                  ❌ Delete
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {services.map((service) => (
+            <Card key={service._id} variant="white" className="border border-mistral-black/5 shadow-none hover:border-brand-orange/30 transition-all flex flex-col h-full">
+              <div className="flex justify-between items-start mb-6">
+                <Badge variant={service.status === 'open' ? 'outline' : 'brand'}>
+                  {service.status === 'open' ? 'IN QUEUE' : 'COMPLETED'}
+                </Badge>
+                <div className="p-3 bg-warm-ivory text-mistral-black/20">
+                  <Wrench size={16} />
                 </div>
               </div>
+
+              <div className="space-y-4 mb-8 flex-grow">
+                <div className="flex items-center gap-3">
+                  <Tag size={12} className="text-mistral-black/40" />
+                  <p className="text-[10px] tracking-widest text-mistral-black/40 uppercase">{service.category}</p>
+                </div>
+                <p className="text-lg font-normal tracking-tight leading-relaxed line-clamp-3">
+                  {service.detail}
+                </p>
+              </div>
+
+              <div className="pt-6 border-t border-mistral-black/5 flex items-center justify-between mt-auto">
+                <div className="flex items-center gap-4 text-mistral-black/30">
+                  <div className="flex items-center gap-1">
+                    <Home size={10} />
+                    <span className="text-[10px] uppercase tracking-widest">{service.houseNo}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Calendar size={10} />
+                    <span className="text-[10px] uppercase tracking-widest">
+                      {new Date(service.request).toLocaleDateString('en-GB')}
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="flex gap-2">
+                  <Button variant="ghost" className="p-2 h-auto text-mistral-black/40 hover:text-mistral-black" onClick={() => openModal('edit', service)}>
+                    <Pencil size={14} />
+                  </Button>
+                  <Button variant="ghost" className="p-2 h-auto text-mistral-black/40 hover:text-brand-orange" onClick={() => openModal('delete', service)}>
+                    <Trash2 size={14} />
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        {services.length === 0 && (
+          <div className="py-40 text-center border-2 border-dashed border-mistral-black/5">
+            <p className="text-xs uppercase tracking-[0.3em] text-mistral-black/20">NO SERVICE REQUESTS FOUND</p>
           </div>
-        ))}
-      </div>
+        )}
+      </Section>
 
       {isModalVisible && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="border-2 border-transparent bg-gradient-to-r from-red-500 to-pink-500 p-1 rounded-lg animate-slideIn">
-            <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
-              {modalMode === 'delete' ? (
-                <>
-                  <h3 className="text-xl font-semibold text-gray-800 text-center">Confirm Delete</h3>
-                  <p className="text-sm text-center text-gray-600 mt-4">
-                    Are you sure you want to delete this Request?
-                  </p>
-                  <div className="flex mt-6 gap-4 justify-center">
-                    <button
-                      onClick={handleDelete}
-                      className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm"
+        <div className="fixed inset-0 bg-mistral-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-6">
+          <Card variant="white" className="max-w-md w-full relative border-t-4 border-mistral-black shadow-none">
+            <button onClick={closeModal} className="absolute top-6 right-6 p-2 hover:bg-mistral-black/5 transition-colors">
+              <X className="w-5 h-5 text-mistral-black" />
+            </button>
+
+            {modalMode === 'delete' ? (
+              <div className="py-8 text-center">
+                <div className="w-20 h-20 bg-brand-orange/10 flex items-center justify-center mx-auto mb-8">
+                  <AlertCircle className="w-10 h-10 text-brand-orange" />
+                </div>
+                <h3 className="text-2xl font-normal tracking-tight mb-4 uppercase">CONFIRM DELETION</h3>
+                <p className="text-sm text-mistral-black/50 mb-10 leading-relaxed uppercase tracking-widest">
+                  ARE YOU SURE YOU WANT TO REMOVE THIS SERVICE REQUEST? THIS ACTION CANNOT BE UNDONE.
+                </p>
+                <div className="flex gap-4">
+                  <Button variant="outline" className="flex-1" onClick={closeModal}>CANCEL</Button>
+                  <Button variant="brand" className="flex-1" onClick={handleDelete}>DELETE</Button>
+                </div>
+              </div>
+            ) : (
+              <div className="py-8">
+                <h3 className="text-2xl font-normal tracking-tight mb-8 uppercase text-center">
+                  {modalMode === 'create' ? 'NEW REQUEST' : 'EDIT REQUEST'}
+                </h3>
+                <form onSubmit={handleFormSubmit} className="space-y-6">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[10px] tracking-widest text-mistral-black/40 uppercase">CATEGORY</label>
+                    <select 
+                      name="category" 
+                      value={formData.category} 
+                      onChange={handleFormChange}
+                      className="bg-warm-ivory border border-mistral-black/10 px-4 py-3 text-sm focus:outline-none focus:border-brand-orange transition-colors"
+                      required
                     >
-                      Yes, Delete
-                    </button>
-                    <button
-                      onClick={closeModal}
-                      className="bg-gray-300 text-black px-4 py-2 rounded-lg text-sm"
-                    >
-                      Cancel
-                    </button>
+                      <option value="">SELECT CATEGORY</option>
+                      {['Plumbing', 'Carpentary', 'Electrical', 'Masonry', 'Cleaning', 'Other'].map(cat => (
+                        <option key={cat} value={cat}>{cat.toUpperCase()}</option>
+                      ))}
+                    </select>
                   </div>
-                </>
-              ) : (
-                <>
-                  <h3 className="text-2xl font-semibold text-gray-800 text-center">
-                    {modalMode === 'create' ? 'Lodge Complaint' : 'Edit Complaint'}
-                  </h3>
-                  <form onSubmit={handleFormSubmit} className="space-y-4 mt-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Category</label>
-                      <select className='mt-1 block w-full p-2 border border-gray-300 rounded-lg text-sm' name="category" value={formData.category} onChange={handleFormChange}>
-                        <option value="">Select category</option>
-                        <option value="Plumbing">Plumbing</option>
-                        <option value="Carpentary">Carpentary</option>
-                        <option value="Electrical">Electrical</option>
-                        <option value="Masonry">Masonry</option>
-                        <option value="Cleaning">Cleaning</option>
-                        <option value="Other">Other</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">detail</label>
-                      <textarea
-                        name="detail"
-                        value={formData.detail}
-                        onChange={handleFormChange}
-                        rows="4"
-                        required
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-lg text-sm"
-                      ></textarea>
-                    </div>
-                    <button
-                      type="submit"
-                      className="w-full bg-gradient-to-r from-red-600 to-pink-600 text-white py-2 px-4 rounded-lg font-semibold"
-                    >
-                      {modalMode === 'create' ? 'Submit Request' : 'Update Request'}
-                    </button>
-                  </form>
-                  <button
-                    onClick={closeModal}
-                    className="mt-4 w-full bg-gradient-to-r from-gray-600 to-gray-800 text-white px-4 py-2 rounded-lg text-sm"
-                  >
-                    Close
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[10px] tracking-widest text-mistral-black/40 uppercase">DETAILS</label>
+                    <textarea
+                      name="detail"
+                      value={formData.detail}
+                      onChange={handleFormChange}
+                      rows="4"
+                      required
+                      placeholder="DESCRIBE THE ISSUE..."
+                      className="bg-warm-ivory border border-mistral-black/10 px-4 py-3 text-sm focus:outline-none focus:border-brand-orange transition-colors resize-none"
+                    ></textarea>
+                  </div>
+                  <Button type="submit" variant="brand" className="w-full py-4 uppercase">
+                    {modalMode === 'create' ? 'SUBMIT REQUEST' : 'UPDATE REQUEST'}
+                  </Button>
+                </form>
+              </div>
+            )}
+          </Card>
         </div>
       )}
     </div>
