@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Section from './ui/Section';
+import PageHeader from './ui/PageHeader';
 import Card from './ui/Card';
 import Button from './ui/Button';
 import Badge from './ui/Badge';
-import { CheckCircle2, Clock, ListTodo } from 'lucide-react';
+import { CheckCircle2, Clock, ListTodo, ClipboardList } from 'lucide-react';
 
 const WorkerDashBoard = () => {
   const [workerData, setWorkerData] = useState(null);
@@ -25,7 +25,7 @@ const WorkerDashBoard = () => {
           const parsedUser = JSON.parse(userData);
           setWorkerData(parsedUser);
 
-          const response = await axios.get(`https://${import.meta.env.VITE_BACKEND_URL}/api/services`, {
+          const response = await axios.get(`http://${import.meta.env.VITE_BACKEND_URL}/api/services`, {
             headers: { Authorization: `Bearer ${token}` },
             params: { page: 1, limit: 10 },
           });
@@ -54,14 +54,14 @@ const WorkerDashBoard = () => {
   const handleCompletion = async (id) => {
     const token = localStorage.getItem('token');
     try {
-      await axios.patch(`https://${import.meta.env.VITE_BACKEND_URL}/api/services/${id}`, {}, {
+      await axios.patch(`http://${import.meta.env.VITE_BACKEND_URL}/api/services/${id}`, {}, {
         headers: { 
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json", 
         },
       });
       // Refresh tasks
-      const response = await axios.get(`https://${import.meta.env.VITE_BACKEND_URL}/api/services`, {
+      const response = await axios.get(`http://${import.meta.env.VITE_BACKEND_URL}/api/services`, {
         headers: { Authorization: `Bearer ${token}` },
         params: { page: 1, limit: 10 },
       });
@@ -82,85 +82,98 @@ const WorkerDashBoard = () => {
   if (!workerData) return null;
 
   return (
-    <div className="pb-20">
-      <Section
-        eyebrow={formattedDate}
-        title={<>WORKER<br /><span className="text-brand-orange">DASHBOARD</span></>}
-        subtitle={`Welcome back, ${workerData.name.toUpperCase()}. Here is your task overview for today.`}
+    <div className="p-6 space-y-6">
+      <PageHeader 
+        title="Worker Dashboard" 
+        subtitle={`Welcome back, ${workerData.name} • Task Overview for Today`}
       >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          <Card variant="ivory" className="flex flex-col justify-between h-48">
-            <div className="flex justify-between items-start">
-              <div className="p-2 bg-mistral-black/5"><ListTodo className="w-5 h-5" /></div>
-              <Badge variant="outline">TOTAL</Badge>
-            </div>
-            <div className="mt-auto">
-              <p className="text-5xl font-normal tracking-tighter">{tasks.length}</p>
-              <p className="text-xs uppercase tracking-widest text-mistral-black/40 mt-2">ASSIGNED TASKS</p>
-            </div>
-          </Card>
-
-          <Card variant="white" className="flex flex-col justify-between h-48 border-l-4 border-brand-orange shadow-none">
-            <div className="flex justify-between items-start">
-              <div className="p-2 bg-brand-orange/10 text-brand-orange"><Clock className="w-5 h-5" /></div>
-              <Badge variant="brand">PENDING</Badge>
-            </div>
-            <div className="mt-auto">
-              <p className="text-5xl font-normal tracking-tighter text-brand-orange">{pendingTasks.length}</p>
-              <p className="text-xs uppercase tracking-widest text-mistral-black/40 mt-2">REQUIRES ATTENTION</p>
-            </div>
-          </Card>
-
-          <Card variant="ivory" className="flex flex-col justify-between h-48">
-            <div className="flex justify-between items-start">
-              <div className="p-2 bg-emerald-500/10 text-emerald-600"><CheckCircle2 className="w-5 h-5" /></div>
-              <Badge className="bg-emerald-500 text-white">COMPLETED</Badge>
-            </div>
-            <div className="mt-auto">
-              <p className="text-5xl font-normal tracking-tighter text-emerald-600">{completedTasks.length}</p>
-              <p className="text-xs uppercase tracking-widest text-mistral-black/40 mt-2">SUCCESSFULLY CLOSED</p>
-            </div>
-          </Card>
+        <div className="hidden md:block text-right px-2">
+          <p className="text-[10px] font-bold tracking-[0.2em] text-mistral-black/60 uppercase">{formattedDate}</p>
         </div>
+      </PageHeader>
 
-        <div className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-mistral-black/5 pb-8">
-          <h3 className="text-3xl font-normal tracking-tight uppercase">TASK LIST</h3>
-          <div className="flex flex-wrap gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="flex flex-col h-32 border-l-4 border-l-mistral-black">
+          <div className="flex justify-between items-start">
+            <div className="p-2 rounded-lg bg-mistral-black/10"><ListTodo className="w-4 h-4 text-mistral-black/60" /></div>
+            <Badge variant="outline" className="text-[10px] font-bold">TOTAL</Badge>
+          </div>
+          <div className="mt-auto">
+            <p className="text-3xl font-bold tracking-tight">{tasks.length}</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-mistral-black/60">Assigned Tasks</p>
+          </div>
+        </Card>
+
+        <Card className="flex flex-col h-32 border-l-4 border-l-brand-orange">
+          <div className="flex justify-between items-start">
+            <div className="p-2 rounded-lg bg-brand-orange/10 text-brand-orange"><Clock className="w-4 h-4" /></div>
+            <Badge variant="brand" className="text-[10px]">PENDING</Badge>
+          </div>
+          <div className="mt-auto">
+            <p className="text-3xl font-bold tracking-tight text-brand-orange">{pendingTasks.length}</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-mistral-black/60">Requires Attention</p>
+          </div>
+        </Card>
+
+        <Card className="flex flex-col h-32 border-l-4 border-l-emerald-500">
+          <div className="flex justify-between items-start">
+            <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-600"><CheckCircle2 className="w-4 h-4" /></div>
+            <Badge className="bg-emerald-500 text-white text-[10px]">COMPLETED</Badge>
+          </div>
+          <div className="mt-auto">
+            <p className="text-3xl font-bold tracking-tight text-emerald-600">{completedTasks.length}</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-mistral-black/60">Successfully Closed</p>
+          </div>
+        </Card>
+      </div>
+
+      <div className="space-y-6 pt-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-4">
+          <div className="flex items-center gap-2">
+            <ClipboardList className="w-4 h-4 text-mistral-black/60" />
+            <h3 className="text-sm font-bold tracking-widest uppercase text-mistral-black/80">Task List</h3>
+          </div>
+          <div className="flex gap-1.5 p-1 bg-mistral-black/5 rounded-xl w-fit">
             {['All', 'Pending', 'Completed'].map((f) => (
-              <Button 
+              <button 
                 key={f}
-                variant={filter === f ? 'primary' : 'outline'}
-                className="py-1 px-4 text-[10px]"
+                className={`px-4 py-1.5 text-[10px] font-bold uppercase rounded-lg transition-all ${
+                  filter === f 
+                  ? 'bg-white text-mistral-black shadow-sm' 
+                  : 'text-mistral-black/60 hover:text-mistral-black'
+                }`}
                 onClick={() => setFilter(f)}
               >
                 {f}
-              </Button>
+              </button>
             ))}
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="grid gap-4">
           {filteredTasks.length > 0 ? (
             filteredTasks.map(task => (
-              <Card key={task._id || task.id} variant="white" className="shadow-none border border-mistral-black/5 hover:border-brand-orange/30 transition-all">
+              <Card key={task._id || task.id} className="group border-border hover:border-mistral-black/20 transition-all">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Badge variant="outline">{task.category}</Badge>
-                      <span className="text-xs text-mistral-black/30 tracking-widest">HOUSE: {task.houseNo}</span>
+                  <div className="flex-1 space-y-2">
+                    <div className="flex items-center gap-3">
+                      <Badge variant="brand" className="text-[10px] font-bold tracking-wider">{task.category.toUpperCase()}</Badge>
+                      <div className="flex items-center gap-1.5 text-[10px] font-bold text-mistral-black/60 tracking-widest uppercase">
+                        HOUSE: {task.houseNo}
+                      </div>
                     </div>
-                    <p className="text-lg font-normal text-mistral-black leading-relaxed">
+                    <p className="text-sm font-bold text-foreground leading-relaxed max-w-2xl">
                       {task.detail}
                     </p>
                   </div>
-                  <div className="flex flex-col md:items-end gap-4">
-                    <span className={`text-[10px] tracking-[0.2em] font-normal uppercase ${task.status === 'open' ? 'text-brand-orange' : 'text-emerald-600'}`}>
-                      {task.status === 'open' ? '• STATUS: PENDING' : '• STATUS: CLOSED'}
+                  <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-4">
+                    <span className={`text-[10px] tracking-[0.2em] font-bold uppercase ${task.status === 'open' ? 'text-brand-orange' : 'text-emerald-600'}`}>
+                      {task.status === 'open' ? 'Pending' : 'Closed'}
                     </span>
                     {task.status === 'open' && (
                       <Button 
                         variant="primary" 
-                        className="py-2 text-[10px]"
+                        className="h-9 px-4 text-[10px]"
                         onClick={() => handleCompletion(task._id)}
                       >
                         MARK COMPLETED
@@ -171,12 +184,12 @@ const WorkerDashBoard = () => {
               </Card>
             ))
           ) : (
-            <div className="py-20 text-center border-2 border-dashed border-mistral-black/5">
-              <p className="text-xs uppercase tracking-[0.3em] text-mistral-black/20">NO TASKS FOUND IN THIS CATEGORY</p>
+            <div className="py-20 text-center border-2 border-dashed border-border rounded-2xl">
+              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-mistral-black/40">No tasks found</p>
             </div>
           )}
         </div>
-      </Section>
+      </div>
     </div>
   );
 };

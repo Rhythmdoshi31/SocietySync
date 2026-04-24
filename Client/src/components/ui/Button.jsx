@@ -6,9 +6,9 @@ const variants = {
   secondary:
     'bg-warm-cream text-mistral-black hover:bg-[#ffe8a3]',
   ghost: 
-    'bg-black/10 text-mistral-black hover:bg-black/20 opacity-40',
+    'bg-mistral-black/10 text-mistral-black hover:bg-mistral-black/20',
   outline:
-    'border border-mistral-black/10 bg-transparent text-mistral-black hover:bg-mistral-black/5',
+    'border border-mistral-black/40 bg-transparent text-mistral-black hover:bg-mistral-black/5',
   brand:
     'bg-brand-orange text-white hover:bg-brand-flame',
 };

@@ -1,46 +1,45 @@
 import React, { useState } from 'react';
-import Section from '../components/ui/Section';
+import PageHeader from '../components/ui/PageHeader';
 import Card from '../components/ui/Card';
 import Badge from '../components/ui/Badge';
-import Button from '../components/ui/Button';
-import { User, Package, Clock, MapPin, CheckCircle2, LogOut, ArrowRight } from 'lucide-react';
+import { User, Package, Clock, MapPin, CheckCircle2, LogOut, ArrowRight, ClipboardList } from 'lucide-react';
 
 const visitorsAndDeliveries = [
   {
     id: 1,
-    name: "RAMESH KUMAR",
+    name: "Ramesh Kumar",
     type: "Visitor",
-    purpose: "GUEST VISIT - FLAT 402",
-    time: "TODAY, 3:15 PM",
+    purpose: "Guest Visit - Flat 402",
+    time: "Today, 3:15 PM",
     status: "entered",
-    photo: "http://images.unsplash.com/photo-1590361818521-0e01eae3df06?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    photo: "http://images.unsplash.com/photo-1590361818521-0e01eae3df06?q=80&w=2940&auto=format&fit=crop",
   },
   {
     id: 2,
-    name: "ZOMATO DELIVERY",
+    name: "Zomato Delivery",
     type: "Delivery",
-    purpose: "FOOD DELIVERY - FLAT 210",
-    time: "TODAY, 1:00 PM",
+    purpose: "Food Delivery - Flat 210",
+    time: "Today, 1:00 PM",
     status: "delivered",
-    photo: "http://images.unsplash.com/photo-1653389527532-884074ac1c65?q=80&w=2924&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    photo: "http://images.unsplash.com/photo-1653389527532-884074ac1c65?q=80&w=2924&auto=format&fit=crop",
   },
   {
     id: 3,
-    name: "SNEHA SHAH",
+    name: "Sneha Shah",
     type: "Visitor",
-    purpose: "FRIEND VISIT - FLAT 103",
-    time: "YESTERDAY, 5:30 PM",
+    purpose: "Friend Visit - Flat 103",
+    time: "Yesterday, 5:30 PM",
     status: "left",
-    photo: "http://images.unsplash.com/photo-1696315289691-5ba9a97cb975?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    photo: "http://images.unsplash.com/photo-1696315289691-5ba9a97cb975?q=80&w=2940&auto=format&fit=crop",
   },
   {
     id: 4,
-    name: "AMAZON DELIVERY",
+    name: "Amazon Delivery",
     type: "Delivery",
-    purpose: "PACKAGE - FLAT 507",
-    time: "YESTERDAY, 12:20 PM",
+    purpose: "Package - Flat 507",
+    time: "Yesterday, 12:20 PM",
     status: "delivered",
-    photo: "http://images.unsplash.com/photo-1602359337719-a8bcbd1f7b51?q=80&w=1908&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    photo: "http://images.unsplash.com/photo-1602359337719-a8bcbd1f7b51?q=80&w=1908&auto=format&fit=crop",
   },
 ];
 
@@ -52,73 +51,79 @@ const VisitorsAndDelivery = () => {
   );
 
   const statusConfig = {
-    entered: { color: 'text-emerald-600', icon: <ArrowRight size={10} />, label: 'ENTERED' },
-    delivered: { color: 'text-blue-600', icon: <CheckCircle2 size={10} />, label: 'DELIVERED' },
-    left: { color: 'text-mistral-black/40', icon: <LogOut size={10} />, label: 'LEFT' },
+    entered: { color: 'text-emerald-600', icon: <ArrowRight size={10} />, label: 'Entered' },
+    delivered: { color: 'text-blue-600', icon: <CheckCircle2 size={10} />, label: 'Delivered' },
+    left: { color: 'text-mistral-black/40', icon: <LogOut size={10} />, label: 'Left' },
   };
 
   return (
-    <div className="pb-20">
-      <Section
-        eyebrow="ACCESS LOGS"
-        title={<>VISITORS &<br /><span className="text-brand-orange">DELIVERIES</span></>}
-        subtitle="Keep track of all personnel entering the society premises for security and convenience."
-      >
-        <div className="flex justify-center gap-4 mb-16">
-          <Button 
-            variant={selectedType === 'Visitor' ? 'primary' : 'ghost'} 
-            className="px-8 py-3 text-[10px]"
-            onClick={() => setSelectedType('Visitor')}
-          >
-            VISITORS
-          </Button>
-          <Button 
-            variant={selectedType === 'Delivery' ? 'primary' : 'ghost'} 
-            className="px-8 py-3 text-[10px]"
-            onClick={() => setSelectedType('Delivery')}
-          >
-            DELIVERIES
-          </Button>
+    <div className="p-6 space-y-6">
+      <PageHeader 
+        title="Visitor Log" 
+        subtitle="Real-time tracking of personnel entering the society."
+      />
+
+      <div className="flex flex-col gap-6">
+        <div className="flex items-center justify-between border-b border-stone-300 pb-4">
+           <div className="flex items-center gap-2 px-1">
+             <ClipboardList className="w-4 h-4 text-stone-700" />
+             <h3 className="text-sm font-bold tracking-widest uppercase text-stone-800">Access Activity</h3>
+           </div>
+           <div className="flex gap-1.5 p-1 bg-stone-200 rounded-xl">
+            {['Visitor', 'Delivery'].map((type) => (
+              <button 
+                key={type}
+                className={`px-5 py-1.5 text-[10px] font-bold uppercase rounded-lg transition-all ${
+                  selectedType === type 
+                  ? 'bg-white text-mistral-black shadow-sm' 
+                  : 'text-mistral-black/60 hover:text-mistral-black'
+                }`}
+                onClick={() => setSelectedType(type)}
+              >
+                {type}s
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-2 max-w-5xl mx-auto">
+        <div className="grid gap-4 md:grid-cols-2">
           {filteredList.map((entry) => (
-            <Card key={entry.id} variant="white" className="p-0 overflow-hidden border border-mistral-black/5 shadow-none group">
-              <div className="grid grid-cols-1 sm:grid-cols-2">
-                <div className="relative aspect-[4/5] sm:aspect-auto overflow-hidden bg-warm-ivory">
+            <Card key={entry.id} className="p-0 overflow-hidden group border-border hover:border-mistral-black/20 transition-all">
+              <div className="flex flex-col sm:flex-row h-full">
+                <div className="relative w-full sm:w-48 aspect-[4/5] sm:aspect-auto overflow-hidden bg-warm-ivory border-r border-border">
                   <img
                     src={entry.photo}
                     alt={entry.name}
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                    className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute top-4 left-4">
-                    <Badge variant="brand" className="bg-mistral-black/80 text-white border-none backdrop-blur-sm">
+                  <div className="absolute top-3 left-3">
+                    <Badge variant="brand" className="h-5 text-[9px] px-2 font-bold bg-mistral-black/80 text-white border-none backdrop-blur-sm">
                       {entry.type === 'Visitor' ? <User size={10} className="mr-1" /> : <Package size={10} className="mr-1" />}
                       {entry.type.toUpperCase()}
                     </Badge>
                   </div>
                 </div>
                 
-                <div className="p-8 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <span className={`text-[10px] tracking-[0.2em] font-normal flex items-center gap-1 ${statusConfig[entry.status].color}`}>
+                <div className="p-5 flex flex-col flex-1 justify-between">
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className={`text-[10px] tracking-widest font-bold flex items-center gap-1 uppercase ${statusConfig[entry.status].color} opacity-100`}>
                         {statusConfig[entry.status].icon}
                         {statusConfig[entry.status].label}
                       </span>
                     </div>
-                    <h3 className="text-xl font-normal tracking-tight uppercase mb-2">{entry.name}</h3>
-                    <p className="text-sm text-mistral-black/60 leading-relaxed mb-6 uppercase tracking-widest">{entry.purpose}</p>
+                    <h3 className="text-base font-bold text-foreground leading-tight">{entry.name}</h3>
+                    <p className="text-[11px] text-mistral-black/70 font-semibold leading-relaxed">{entry.purpose}</p>
                   </div>
 
-                  <div className="space-y-3 pt-6 border-t border-mistral-black/5">
-                    <div className="flex items-center gap-3 text-mistral-black/30">
-                      <Clock size={12} />
-                      <span className="text-[10px] uppercase tracking-widest">{entry.time}</span>
+                  <div className="grid grid-cols-2 gap-2 pt-5 mt-4 border-t border-border">
+                    <div className="flex items-center gap-2 text-mistral-black/60">
+                      <Clock size={12} className="shrink-0" />
+                      <span className="text-[9px] font-bold uppercase tracking-widest truncate">{entry.time}</span>
                     </div>
-                    <div className="flex items-center gap-3 text-mistral-black/30">
-                      <MapPin size={12} />
-                      <span className="text-[10px] uppercase tracking-widest">GATE 01 • MAIN ENTRY</span>
+                    <div className="flex items-center gap-2 text-mistral-black/60">
+                      <MapPin size={12} className="shrink-0" />
+                      <span className="text-[9px] font-bold uppercase tracking-widest truncate">GATE 01</span>
                     </div>
                   </div>
                 </div>
@@ -128,11 +133,12 @@ const VisitorsAndDelivery = () => {
         </div>
 
         {filteredList.length === 0 && (
-          <div className="py-40 text-center border-2 border-dashed border-mistral-black/5">
-            <p className="text-xs uppercase tracking-[0.3em] text-mistral-black/20">NO RECORDS FOUND</p>
+          <div className="py-24 text-center border-2 border-dashed border-border rounded-2xl">
+            <ClipboardList className="w-10 h-10 text-mistral-black/20 mx-auto mb-4" />
+            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-mistral-black/40">No records found</p>
           </div>
         )}
-      </Section>
+      </div>
     </div>
   );
 };

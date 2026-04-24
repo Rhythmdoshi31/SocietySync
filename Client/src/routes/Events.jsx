@@ -1,10 +1,10 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import Section from '../components/ui/Section';
+import PageHeader from '../components/ui/PageHeader';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
-import { Calendar as CalendarIcon, MapPin, Plus, Pencil, Trash2, X, Clock } from 'lucide-react';
+import { Calendar as CalendarIcon, MapPin, Plus, Pencil, Trash2, X, Clock, Info } from 'lucide-react';
 
 const Events = () => {
   const isAdmin = localStorage.getItem('admin') && localStorage.getItem('token');
@@ -96,161 +96,176 @@ const Events = () => {
   };
 
   return (
-    <div className="pb-20">
-      <Section
-        eyebrow="COMMUNITY GATHERINGS"
-        title={<>SOCIETY<br /><span className="text-brand-orange">EVENTS</span></>}
-        subtitle="Stay updated with the latest happenings in our community. From festivals to meetings, find it all here."
+    <div className="p-6 space-y-6">
+      <PageHeader 
+        title="Events" 
+        subtitle="Discover upcoming gatherings and meetings in the society."
       >
-        <div className="flex justify-end mb-12">
-          {isAdmin && (
-            <Button variant="brand" className="gap-2" onClick={() => openModal('create')}>
-              <Plus className="w-4 h-4" />
-              CREATE EVENT
-            </Button>
-          )}
-        </div>
+        {isAdmin && (
+          <Button variant="brand" className="gap-2 h-10 px-4 text-xs" onClick={() => openModal('create')}>
+            <Plus className="w-3.5 h-3.5" />
+            CREATE EVENT
+          </Button>
+        )}
+      </PageHeader>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {events.map((event) => (
-            <Card 
-              key={event._id} 
-              variant="white" 
-              className="group cursor-pointer hover:bg-mistral-black hover:text-white transition-all duration-500 border border-mistral-black/5 shadow-none flex flex-col h-full"
-              onClick={() => openModal('view', event)}
-            >
-              <div className="flex justify-between items-start mb-8">
-                <div className="p-3 bg-mistral-black/5 group-hover:bg-white/10 transition-colors">
-                  <CalendarIcon className="w-5 h-5 text-mistral-black group-hover:text-white" />
-                </div>
-                <Badge variant="outline" className="group-hover:border-white/20 group-hover:text-white">UPCOMING</Badge>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {events.map((event) => (
+          <Card 
+            key={event._id} 
+            className="group flex flex-col h-full"
+          >
+            <div className="flex justify-between items-start mb-5">
+              <div className="p-2.5 rounded-xl bg-mistral-black/10 text-mistral-black group-hover:bg-mistral-black group-hover:text-white transition-colors">
+                <CalendarIcon className="w-4 h-4" />
               </div>
+              <Badge variant="brand" className="text-[10px] tracking-wider font-bold">UPCOMING</Badge>
+            </div>
 
-              <h3 className="text-2xl font-normal tracking-tight mb-4 uppercase leading-tight">{event.title}</h3>
-              
-              <div className="space-y-2 mb-8 flex-1">
-                <div className="flex items-center gap-2 text-xs tracking-widest text-mistral-black/40 group-hover:text-white/40">
-                  <Clock className="w-3 h-3" />
-                  {event.date.toUpperCase()}
-                </div>
-                <div className="flex items-center gap-2 text-xs tracking-widest text-mistral-black/40 group-hover:text-white/40">
-                  <MapPin className="w-3 h-3" />
-                  {event.venue.toUpperCase()}
-                </div>
+            <h3 className="text-lg font-semibold text-foreground mb-3 leading-tight">{event.title}</h3>
+            
+            <div className="space-y-2 mb-6 flex-1">
+              <div className="flex items-center gap-2.5 text-xs text-mistral-black/70 font-bold">
+                <Clock className="w-3.5 h-3.5" />
+                {new Date(event.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
               </div>
+              <div className="flex items-center gap-2.5 text-xs text-mistral-black/70 font-bold">
+                <MapPin className="w-3.5 h-3.5" />
+                {event.venue}
+              </div>
+            </div>
 
+            <div className="flex gap-2 pt-4 border-t border-border mt-auto">
+              <Button variant="outline" className="flex-1 h-9 py-0 text-[10px]" onClick={() => openModal('view', event)}>
+                <Info className="w-3 h-3 mr-2" />
+                DETAILS
+              </Button>
               {isAdmin && (
-                <div className="flex gap-2 pt-6 border-t border-mistral-black/5 group-hover:border-white/10" onClick={(e) => e.stopPropagation()}>
-                  <Button variant="outline" className="flex-1 py-2 text-[10px] group-hover:bg-white/10 group-hover:text-white group-hover:border-transparent" onClick={() => openModal('edit', event)}>
-                    <Pencil className="w-3 h-3 mr-2" />
-                    EDIT
+                <div className="flex gap-2 w-full">
+                  <Button variant="ghost" className="p-2 h-9 text-mistral-black/40 hover:text-mistral-black opacity-100" onClick={() => openModal('edit', event)}>
+                    <Pencil className="w-3.5 h-3.5" />
                   </Button>
-                  <Button variant="ghost" className="flex-1 py-2 text-[10px] text-brand-orange group-hover:bg-brand-orange/20" onClick={() => openModal('delete', event)}>
-                    <Trash2 className="w-3 h-3 mr-2" />
-                    DELETE
+                  <Button variant="ghost" className="p-2 h-9 text-mistral-black/40 hover:text-brand-orange opacity-100" onClick={() => openModal('delete', event)}>
+                    <Trash2 className="w-3.5 h-3.5" />
                   </Button>
                 </div>
               )}
-            </Card>
-          ))}
-        </div>
-      </Section>
+            </div>
+          </Card>
+        ))}
+
+        {events.length === 0 && (
+          <div className="col-span-full py-20 text-center border-2 border-dashed border-border rounded-2xl">
+            <CalendarIcon className="w-10 h-10 text-mistral-black/20 mx-auto mb-4" />
+            <p className="text-sm text-mistral-black/60 font-bold uppercase tracking-widest">No upcoming events</p>
+          </div>
+        )}
+      </div>
 
       {isModalVisible && (
-        <div className="fixed inset-0 bg-mistral-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-6">
-          <Card variant="white" className="max-w-md w-full relative">
-            <button onClick={closeModal} className="absolute top-6 right-6 p-2 hover:bg-mistral-black/5 transition-colors">
-              <X className="w-5 h-5 text-mistral-black" />
+        <div 
+          className="fixed inset-0 bg-mistral-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-6"
+          onClick={closeModal}
+        >
+          <Card 
+            className="max-w-md w-full relative shadow-2xl animate-in fade-in zoom-in duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button onClick={closeModal} className="absolute top-5 right-5 p-2 hover:bg-mistral-black/5 rounded-lg transition-colors">
+              <X className="w-4 h-4 text-mistral-black" />
             </button>
 
             {modalMode === 'delete' ? (
               <div className="py-4 text-center">
-                <div className="w-16 h-16 bg-brand-orange/10 flex items-center justify-center mx-auto mb-6">
-                  <Trash2 className="w-8 h-8 text-brand-orange" />
+                <div className="w-12 h-12 bg-brand-orange/10 flex items-center justify-center mx-auto mb-5 rounded-xl">
+                  <Trash2 className="w-6 h-6 text-brand-orange" />
                 </div>
-                <h3 className="text-2xl font-normal tracking-tight mb-2 uppercase">CANCEL EVENT</h3>
-                <p className="text-sm text-mistral-black/50 mb-10">Are you sure you want to cancel and remove this event?</p>
-                <div className="flex gap-4">
-                  <Button variant="outline" className="flex-1" onClick={closeModal}>BACK</Button>
-                  <Button variant="brand" className="flex-1" onClick={handleDelete}>DELETE</Button>
+                <h3 className="text-xl font-bold mb-2">Cancel Event</h3>
+                <p className="text-sm text-mistral-black/70 mb-8 font-medium leading-relaxed">Are you sure you want to cancel and remove this event? This cannot be undone.</p>
+                <div className="flex gap-3">
+                  <Button variant="outline" className="flex-1 h-11" onClick={closeModal}>BACK</Button>
+                  <Button variant="brand" className="flex-1 h-11" onClick={handleDelete}>DELETE</Button>
                 </div>
               </div>
             ) : modalMode === 'view' ? (
-              <div className="py-4">
-                <Badge variant="brand" className="mb-4">EVENT DETAILS</Badge>
-                <h3 className="text-3xl font-normal tracking-tight mb-6 uppercase leading-tight">{selectedEvent.title}</h3>
-                <div className="grid grid-cols-2 gap-4 mb-8">
-                  <div className="p-4 bg-warm-ivory border border-mistral-black/5">
-                    <p className="text-[10px] tracking-widest text-mistral-black/40 mb-1 uppercase">DATE</p>
-                    <p className="text-xs font-normal uppercase tracking-tight">{selectedEvent.date}</p>
+              <div className="py-2">
+                <Badge variant="brand" className="mb-4 text-[9px] h-5 px-2">EVENT DETAILS</Badge>
+                <h3 className="text-2xl font-bold mb-6 leading-tight">{selectedEvent.title}</h3>
+                <div className="grid grid-cols-2 gap-3 mb-6">
+                  <div className="p-3.5 bg-warm-ivory border border-border rounded-xl">
+                    <p className="text-[10px] font-bold text-mistral-black/50 mb-1 uppercase tracking-wider">Date</p>
+                    <p className="text-xs font-bold">{new Date(selectedEvent.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
                   </div>
-                  <div className="p-4 bg-warm-ivory border border-mistral-black/5">
-                    <p className="text-[10px] tracking-widest text-mistral-black/40 mb-1 uppercase">VENUE</p>
-                    <p className="text-xs font-normal uppercase tracking-tight">{selectedEvent.venue}</p>
+                  <div className="p-3.5 bg-warm-ivory border border-border rounded-xl">
+                    <p className="text-[10px] font-bold text-mistral-black/50 mb-1 uppercase tracking-wider">Venue</p>
+                    <p className="text-xs font-bold">{selectedEvent.venue}</p>
                   </div>
                 </div>
-                <div className="mb-10">
-                  <p className="text-[10px] tracking-widest text-mistral-black/40 mb-3 uppercase">ABOUT THE EVENT</p>
-                  <p className="text-sm text-mistral-black/70 leading-relaxed whitespace-pre-line">
+                <div className="mb-8">
+                  <p className="text-[10px] font-bold text-mistral-black/50 mb-2 uppercase tracking-wider">About the Event</p>
+                  <p className="text-sm text-mistral-black/80 leading-relaxed whitespace-pre-line font-medium">
                     {selectedEvent.description}
                   </p>
                 </div>
-                <Button variant="primary" className="w-full py-4" onClick={closeModal}>CLOSE</Button>
+                <Button variant="primary" className="w-full h-11" onClick={closeModal}>CLOSE</Button>
               </div>
             ) : (
-              <div className="py-4">
-                <h3 className="text-2xl font-normal tracking-tight mb-8 uppercase">
-                  {modalMode === 'create' ? 'CREATE EVENT' : 'EDIT EVENT'}
+              <div className="py-2">
+                <h3 className="text-xl font-semibold mb-6">
+                  {modalMode === 'create' ? 'Create Event' : 'Edit Event'}
                 </h3>
-                <form onSubmit={handleFormSubmit} className="space-y-6">
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-normal uppercase tracking-wider text-mistral-black/50">TITLE</label>
+                <form onSubmit={handleFormSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-mistral-black/40 ml-1">Title</label>
                     <input
                       type="text"
                       name="title"
                       value={formData.title}
                       onChange={handleFormChange}
                       required
-                      className="bg-warm-ivory border border-mistral-black/10 px-4 py-3 text-sm focus:outline-none focus:border-brand-orange transition-colors"
+                      placeholder="Event name"
+                      className="w-full bg-white border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all font-medium text-foreground"
                     />
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-normal uppercase tracking-wider text-mistral-black/50">DESCRIPTION</label>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-mistral-black/40 ml-1">Description</label>
                     <textarea
                       name="description"
                       value={formData.description}
                       onChange={handleFormChange}
                       rows="3"
                       required
-                      className="bg-warm-ivory border border-mistral-black/10 px-4 py-3 text-sm focus:outline-none focus:border-brand-orange transition-colors resize-none"
+                      placeholder="What is this event about?"
+                      className="w-full bg-white border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all resize-none font-medium text-foreground"
                     ></textarea>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-2">
-                      <label className="text-xs font-normal uppercase tracking-wider text-mistral-black/50">DATE</label>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-mistral-black/40 ml-1">Date</label>
                       <input
                         type="date"
                         name="date"
                         value={formData.date}
                         onChange={handleFormChange}
                         required
-                        className="bg-warm-ivory border border-mistral-black/10 px-4 py-3 text-sm focus:outline-none focus:border-brand-orange transition-colors"
+                        className="w-full bg-white border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all font-medium text-foreground"
                       />
                     </div>
-                    <div className="flex flex-col gap-2">
-                      <label className="text-xs font-normal uppercase tracking-wider text-mistral-black/50">VENUE</label>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-mistral-black/40 ml-1">Venue</label>
                       <input
                         type="text"
                         name="venue"
                         value={formData.venue}
                         onChange={handleFormChange}
                         required
-                        className="bg-warm-ivory border border-mistral-black/10 px-4 py-3 text-sm focus:outline-none focus:border-brand-orange transition-colors"
+                        placeholder="Location"
+                        className="w-full bg-white border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all font-medium text-foreground"
                       />
                     </div>
                   </div>
-                  <Button type="submit" variant="brand" className="w-full py-4 mt-4">
-                    {modalMode === 'create' ? 'POST EVENT' : 'SAVE CHANGES'}
+                  <Button type="submit" variant="brand" className="w-full h-12 mt-4 uppercase">
+                    {modalMode === 'create' ? 'Post Event' : 'Save Changes'}
                   </Button>
                 </form>
               </div>

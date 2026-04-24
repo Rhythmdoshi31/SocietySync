@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Section from '../components/ui/Section';
+import PageHeader from '../components/ui/PageHeader';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
-import { Siren, Phone, X, AlertTriangle } from 'lucide-react';
+import { Siren, Phone, X, AlertTriangle, ShieldCheck } from 'lucide-react';
 
 const EmergencyPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -21,71 +21,79 @@ const EmergencyPage = () => {
   };
 
   return (
-    <div className="pb-20">
-      <Section
-        eyebrow="CRITICAL ASSISTANCE"
-        title={<>EMERGENCY<br /><span className="text-brand-orange">SERVICES</span></>}
-        subtitle="Immediate assistance is just a click away. Connect with society security and medical services instantly."
-      >
-        <div className="max-w-3xl mx-auto text-center py-20">
-          <Card variant="ivory" className="relative p-12 md:p-20 flex flex-col items-center border border-brand-orange/20 overflow-hidden shadow-none">
-            {/* Ambient pulse effect behind the button */}
-            <div className="absolute inset-0 bg-brand-orange/5 animate-pulse"></div>
-            
-            <div className="relative z-10 w-24 h-24 bg-brand-orange/10 flex items-center justify-center mb-12">
-              <Siren className="w-12 h-12 text-brand-orange animate-bounce" />
-            </div>
+    <div className="p-6 space-y-6">
+      <PageHeader 
+        title="Emergency" 
+        subtitle="Immediate assistance is just a click away."
+      />
 
-            <h3 className="relative z-10 text-4xl font-normal tracking-tight mb-6 uppercase">SOS EMERGENCY</h3>
-            <p className="relative z-10 text-sm text-mistral-black/50 mb-12 max-w-md uppercase tracking-widest leading-loose">
-              BY PRESSING THE BUTTON BELOW, YOU WILL IMMEDIATELY INITIATE A CALL TO SOCIETY SECURITY AND NOTIFY MANAGEMENT.
-            </p>
-
-            <Button 
-              variant="brand" 
-              className="relative z-10 w-full md:w-auto px-12 py-6 text-lg gap-3"
-              onClick={handleEmergencyClick}
-            >
-              <Phone className="w-5 h-5" />
-              TRIGGER EMERGENCY
-            </Button>
-          </Card>
-
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card variant="white" className="p-6 flex items-center gap-4 border border-mistral-black/5 text-left shadow-none">
-              <div className="p-3 bg-mistral-black/5"><Phone className="w-5 h-5" /></div>
-              <div>
-                <p className="text-[10px] tracking-widest text-mistral-black/40 uppercase">SECURITY GATE</p>
-                <p className="text-sm font-normal">+91 99981 60378</p>
-              </div>
-            </Card>
-            <Card variant="white" className="p-6 flex items-center gap-4 border border-mistral-black/5 text-left shadow-none">
-              <div className="p-3 bg-mistral-black/5"><Phone className="w-5 h-5" /></div>
-              <div>
-                <p className="text-[10px] tracking-widest text-mistral-black/40 uppercase">POLICE / AMBULANCE</p>
-                <p className="text-sm font-normal">100 / 108</p>
-              </div>
-            </Card>
+      <div className="max-w-4xl mx-auto space-y-6">
+        <Card className="relative p-12 flex flex-col items-center text-center overflow-hidden">
+          <div className="absolute inset-0 bg-brand-orange/[0.03] animate-pulse" />
+          
+          <div className="relative z-10 w-20 h-20 bg-brand-orange/10 rounded-2xl flex items-center justify-center mb-8">
+            <Siren className="w-10 h-10 text-brand-orange animate-bounce" />
           </div>
+
+          <h3 className="relative z-10 text-3xl font-bold tracking-tight mb-4 uppercase text-mistral-black">SOS Emergency</h3>
+          <p className="relative z-10 text-sm text-mistral-black/80 mb-10 max-w-sm font-medium leading-relaxed">
+            By pressing the button below, you will immediately initiate a call to society security and notify management.
+          </p>
+
+          <Button 
+            variant="brand" 
+            className="relative z-10 w-full md:w-auto h-16 px-12 text-sm font-bold tracking-[0.2em] gap-3 rounded-2xl shadow-xl shadow-brand-orange/20"
+            onClick={handleEmergencyClick}
+          >
+            <Phone className="w-5 h-5" />
+            TRIGGER EMERGENCY
+          </Button>
+        </Card>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card className="group flex items-center gap-5 border-border hover:border-mistral-black/20 transition-all">
+            <div className="p-3.5 rounded-xl bg-mistral-black/10 text-mistral-black group-hover:bg-mistral-black group-hover:text-white transition-colors">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-[10px] font-bold tracking-widest text-mistral-black/60 uppercase">Security Gate</p>
+              <p className="text-sm font-bold text-foreground">+91 99981 60378</p>
+            </div>
+          </Card>
+          <Card className="group flex items-center gap-5 border-border hover:border-mistral-black/20 transition-all">
+            <div className="p-3.5 rounded-xl bg-mistral-black/10 text-mistral-black group-hover:bg-mistral-black group-hover:text-white transition-colors">
+              <Phone className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-[10px] font-bold tracking-widest text-mistral-black/60 uppercase">Police / Ambulance</p>
+              <p className="text-sm font-bold text-foreground">100 / 108</p>
+            </div>
+          </Card>
         </div>
-      </Section>
+      </div>
 
       {isModalVisible && (
-        <div className="fixed inset-0 bg-mistral-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-6">
-          <Card variant="white" className="max-w-md w-full relative border-t-4 border-brand-orange shadow-none">
-            <button onClick={closeModal} className="absolute top-6 right-6 p-2 hover:bg-mistral-black/5 transition-colors">
-              <X className="w-5 h-5 text-mistral-black" />
+        <div 
+          className="fixed inset-0 bg-mistral-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-6"
+          onClick={closeModal}
+        >
+          <Card 
+            className="max-w-sm w-full relative shadow-2xl animate-in fade-in zoom-in duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button onClick={closeModal} className="absolute top-5 right-5 p-2 hover:bg-mistral-black/5 rounded-lg transition-colors">
+              <X className="w-4 h-4 text-mistral-black" />
             </button>
 
-            <div className="py-8 text-center">
-              <div className="w-20 h-20 bg-brand-orange/10 flex items-center justify-center mx-auto mb-8">
-                <AlertTriangle className="w-10 h-10 text-brand-orange" />
+            <div className="py-4 text-center">
+              <div className="w-16 h-16 bg-brand-orange/10 flex items-center justify-center mx-auto mb-6 rounded-2xl">
+                <AlertTriangle className="w-8 h-8 text-brand-orange" />
               </div>
-              <h3 className="text-2xl font-normal tracking-tight mb-4 uppercase">ALERT TRIGGERED</h3>
-              <p className="text-sm text-mistral-black/50 mb-10 leading-relaxed uppercase tracking-widest">
-                An emergency protocol has been initiated. <br />Authorities have been notified.
+              <h3 className="text-xl font-bold mb-2 uppercase tracking-tight text-mistral-black">Alert Triggered</h3>
+              <p className="text-sm text-mistral-black/80 mb-8 px-4 font-medium leading-relaxed">
+                An emergency protocol has been initiated. Authorities have been notified.
               </p>
-              <Button variant="primary" className="w-full py-4" onClick={closeModal}>CLOSE OVERLAY</Button>
+              <Button variant="primary" className="w-full h-11 uppercase tracking-widest text-xs font-bold" onClick={closeModal}>Close Overlay</Button>
             </div>
           </Card>
         </div>

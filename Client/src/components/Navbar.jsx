@@ -33,17 +33,17 @@ const Navbar = ({ toggleSidebar }) => {
   }, []);
 
   return (
-    <nav className="h-20 bg-warm-ivory border-b border-mistral-black/5 flex items-center justify-between px-6 md:px-12 sticky top-0 z-30">
+    <nav className="h-20 bg-warm-ivory border-b border-mistral-black/20 flex items-center justify-between px-6 md:px-12 sticky top-0 z-30">
       <div className="flex items-center gap-4">
         <button onClick={toggleSidebar} className="md:hidden p-2 hover:bg-mistral-black/5 transition-colors">
           <Menu className="w-6 h-6 text-mistral-black" />
         </button>
         <div className="relative hidden md:block">
-          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-mistral-black/30" />
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-mistral-black/60" />
           <input 
             type="text" 
             placeholder="SEARCH..." 
-            className="bg-transparent border border-mistral-black/10 px-10 py-2 text-xs uppercase tracking-widest focus:outline-none focus:border-brand-orange w-64 transition-all"
+            className="bg-white border border-mistral-black/30 px-10 py-2 text-xs uppercase tracking-widest focus:outline-none focus:border-brand-orange w-64 transition-all"
           />
         </div>
       </div>
@@ -62,11 +62,11 @@ const Navbar = ({ toggleSidebar }) => {
             <p className="text-xs font-normal text-mistral-black leading-none uppercase tracking-tighter">
               {user?.name || 'User'}
             </p>
-            <p className="text-[10px] text-mistral-black/40 uppercase tracking-widest mt-1">
+            <p className="text-[10px] text-mistral-black/60 font-bold uppercase tracking-widest mt-1">
               {user?.houseNo || 'Member'}
             </p>
           </div>
-          <div className="w-10 h-10 border border-mistral-black/10 overflow-hidden">
+          <div className="w-10 h-10 border border-mistral-black/30 overflow-hidden shadow-sm">
             <img 
               src={profilePicture || "https://placehold.co/100"} 
               alt="Profile" 
