@@ -23,7 +23,7 @@ const HeroOrnament = () => (
     className="mt-10 w-full max-w-md text-white/[0.14]"
     viewBox="0 0 400 120"
     fill="none"
-    xmlns="http://www.w3.org/2000/svg"
+    xmlns="https://www.w3.org/2000/svg"
     aria-hidden
   >
     <path

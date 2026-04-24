@@ -23,7 +23,7 @@ const Events = () => {
     const fetchEvents = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get(`http://${import.meta.env.VITE_BACKEND_URL}/api/events`, {
+        const response = await axios.get(`https://${import.meta.env.VITE_BACKEND_URL}/api/events`, {
           headers: { Authorization: `Bearer ${token}` },
           params: { page: 1, limit: 10 },
         });
@@ -67,11 +67,11 @@ const Events = () => {
     const token = localStorage.getItem('token');
     try {
       if (modalMode === 'create') {
-        await axios.post(`http://${import.meta.env.VITE_BACKEND_URL}/api/events/create`, formData, {
+        await axios.post(`https://${import.meta.env.VITE_BACKEND_URL}/api/events/create`, formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } else if (modalMode === 'edit') {
-        await axios.put(`http://${import.meta.env.VITE_BACKEND_URL}/api/events/${selectedEvent._id}`, formData, {
+        await axios.put(`https://${import.meta.env.VITE_BACKEND_URL}/api/events/${selectedEvent._id}`, formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
@@ -85,7 +85,7 @@ const Events = () => {
   const handleDelete = async () => {
     const token = localStorage.getItem('token');
     try {
-      await axios.delete(`http://${import.meta.env.VITE_BACKEND_URL}/api/events/${selectedEvent._id}`, {
+      await axios.delete(`https://${import.meta.env.VITE_BACKEND_URL}/api/events/${selectedEvent._id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       closeModal();

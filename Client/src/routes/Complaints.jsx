@@ -21,7 +21,7 @@ const Complaints = () => {
     const fetchComplaints = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get(`http://${import.meta.env.VITE_BACKEND_URL}/api/complaints`, {
+        const response = await axios.get(`https://${import.meta.env.VITE_BACKEND_URL}/api/complaints`, {
           headers: { Authorization: `Bearer ${token}` },
           params: { page: 1, limit: 10 },
         });
@@ -71,12 +71,12 @@ const Complaints = () => {
 
     try {
       if (modalMode === 'create') {
-        await axios.post(`http://${import.meta.env.VITE_BACKEND_URL}/api/complaints/create`, formData, {
+        await axios.post(`https://${import.meta.env.VITE_BACKEND_URL}/api/complaints/create`, formData, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } else if (modalMode === 'edit') {
         await axios.put(
-          `http://${import.meta.env.VITE_BACKEND_URL}/api/complaints/${selectedComplaintId}`,
+          `https://${import.meta.env.VITE_BACKEND_URL}/api/complaints/${selectedComplaintId}`,
           formData,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -95,7 +95,7 @@ const Complaints = () => {
   const handleDelete = async () => {
     const token = localStorage.getItem('token');
     try {
-      await axios.delete(`http://${import.meta.env.VITE_BACKEND_URL}/api/complaints/${selectedComplaintId}`, {
+      await axios.delete(`https://${import.meta.env.VITE_BACKEND_URL}/api/complaints/${selectedComplaintId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       closeModal();

@@ -25,7 +25,7 @@ const WorkerDashBoard = () => {
           const parsedUser = JSON.parse(userData);
           setWorkerData(parsedUser);
 
-          const response = await axios.get(`http://${import.meta.env.VITE_BACKEND_URL}/api/services`, {
+          const response = await axios.get(`https://${import.meta.env.VITE_BACKEND_URL}/api/services`, {
             headers: { Authorization: `Bearer ${token}` },
             params: { page: 1, limit: 10 },
           });
@@ -54,14 +54,14 @@ const WorkerDashBoard = () => {
   const handleCompletion = async (id) => {
     const token = localStorage.getItem('token');
     try {
-      await axios.patch(`http://${import.meta.env.VITE_BACKEND_URL}/api/services/${id}`, {}, {
+      await axios.patch(`https://${import.meta.env.VITE_BACKEND_URL}/api/services/${id}`, {}, {
         headers: { 
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json", 
         },
       });
       // Refresh tasks
-      const response = await axios.get(`http://${import.meta.env.VITE_BACKEND_URL}/api/services`, {
+      const response = await axios.get(`https://${import.meta.env.VITE_BACKEND_URL}/api/services`, {
         headers: { Authorization: `Bearer ${token}` },
         params: { page: 1, limit: 10 },
       });

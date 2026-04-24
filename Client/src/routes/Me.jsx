@@ -16,7 +16,7 @@ export default function Me() {
     confirmPassword: "",
   });
   const [initialForm, setInitialForm] = useState(form);
-  const [profilePic, setProfilePic] = useState("http://placehold.co/600x400");
+  const [profilePic, setProfilePic] = useState("https://placehold.co/600x400");
   const [previewPic, setPreviewPic] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
@@ -44,7 +44,7 @@ export default function Me() {
       
         const token = localStorage.getItem("token");
       
-        const response = await fetch(`http://${import.meta.env.VITE_BACKEND_URL}/api/me/profile-picture`, {
+        const response = await fetch(`https://${import.meta.env.VITE_BACKEND_URL}/api/me/profile-picture`, {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -111,7 +111,7 @@ export default function Me() {
       }
 
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://${import.meta.env.VITE_BACKEND_URL}/api/me`, {
+      const res = await fetch(`https://${import.meta.env.VITE_BACKEND_URL}/api/me`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -184,7 +184,7 @@ export default function Me() {
         try {
           const token = localStorage.getItem("token");
           const response = await fetch(
-            `http://${import.meta.env.VITE_BACKEND_URL}/api/me/profile-picture/${userId}`,
+            `https://${import.meta.env.VITE_BACKEND_URL}/api/me/profile-picture/${userId}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -195,7 +195,7 @@ export default function Me() {
           setProfilePic(objectUrl);
         } catch (err) {
           console.error("Error fetching profile picture:", err);
-          setProfilePic("http://via.placeholder.com/120");
+          setProfilePic("https://via.placeholder.com/120");
         }
       };
       if (userObj.id) fetchAndSetProfilePic(userObj.id);

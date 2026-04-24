@@ -12,7 +12,7 @@ const visitorsAndDeliveries = [
     purpose: "Guest Visit - Flat 402",
     time: "Today, 3:15 PM",
     status: "entered",
-    photo: "http://images.unsplash.com/photo-1590361818521-0e01eae3df06?q=80&w=2940&auto=format&fit=crop",
+    photo: "https://images.unsplash.com/photo-1590361818521-0e01eae3df06?q=80&w=2940&auto=format&fit=crop",
   },
   {
     id: 2,
@@ -21,7 +21,7 @@ const visitorsAndDeliveries = [
     purpose: "Food Delivery - Flat 210",
     time: "Today, 1:00 PM",
     status: "delivered",
-    photo: "http://images.unsplash.com/photo-1653389527532-884074ac1c65?q=80&w=2924&auto=format&fit=crop",
+    photo: "https://images.unsplash.com/photo-1653389527532-884074ac1c65?q=80&w=2924&auto=format&fit=crop",
   },
   {
     id: 3,
@@ -30,7 +30,7 @@ const visitorsAndDeliveries = [
     purpose: "Friend Visit - Flat 103",
     time: "Yesterday, 5:30 PM",
     status: "left",
-    photo: "http://images.unsplash.com/photo-1696315289691-5ba9a97cb975?q=80&w=2940&auto=format&fit=crop",
+    photo: "https://images.unsplash.com/photo-1696315289691-5ba9a97cb975?q=80&w=2940&auto=format&fit=crop",
   },
   {
     id: 4,
@@ -39,7 +39,7 @@ const visitorsAndDeliveries = [
     purpose: "Package - Flat 507",
     time: "Yesterday, 12:20 PM",
     status: "delivered",
-    photo: "http://images.unsplash.com/photo-1602359337719-a8bcbd1f7b51?q=80&w=1908&auto=format&fit=crop",
+    photo: "https://images.unsplash.com/photo-1602359337719-a8bcbd1f7b51?q=80&w=1908&auto=format&fit=crop",
   },
 ];
 
