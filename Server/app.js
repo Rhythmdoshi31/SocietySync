@@ -10,7 +10,7 @@ connectDB();
 
 app.use(express.json());
 app.use(cors({
-  origin: ['https://society-sync-neon.vercel.app', 'https://societysync.rhythmdoshi.site'],
+  origin: ['https://society-sync-neon.vercel.app', 'https://societysync.rhythmdoshi.site', 'http://localhost:5173'],
   credentials: true
 }));
 // Serve static files from the 'public' directory
