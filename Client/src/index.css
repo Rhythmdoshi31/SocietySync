@@ -1,13 +1,73 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-* {
-  font-family: 'Inter', sans-serif;
+@theme {
+  --color-brand-orange: #fa520f;
+  --color-brand-flame: #fb6424;
+
+  --color-sunshine-700: #ffa110;
+  --color-sunshine-500: #ffb83e;
+  --color-sunshine-300: #ffd06a;
+
+  --color-warm-ivory: #fffaeb;
+  --color-warm-cream: #fff0c2;
+
+  --color-mistral-black: #1f1f1f;
+
+
+  --color-border: #e5e7eb;
+  --color-ring: #1f1f1f;
+
+
+  --color-background: #fffaeb;
+  --color-foreground: #1f1f1f;
+
+  --shadow-mistral: -8px 16px 39px rgba(127, 99, 21, 0.12),
+    -33px 64px 72px rgba(127, 99, 21, 0.1),
+    -73px 144px 97px rgba(127, 99, 21, 0.06);
+
+  --font-arial: Arial, ui-sans-serif, system-ui, sans-serif;
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  background-color: #f8fafc;
-  color: #0f172a;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-warm-ivory text-mistral-black font-arial antialiased;
+    margin: 0;
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-arial font-normal tracking-tight;
+  }
+}
+
+@layer utilities {
+  .text-display {
+    font-size: 82px;
+    line-height: 1.0;
+    letter-spacing: -2.05px;
+  }
+
+  .text-section {
+    font-size: 56px;
+    line-height: 0.95;
+  }
+
+  .mistral-gradient {
+    background: linear-gradient(to right, #ffd900, #ffe295, #ffa110, #ff8105, #fb6424, #fa520f);
+  }
+
+  .glass-light {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
 }

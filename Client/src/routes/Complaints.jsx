@@ -1,12 +1,17 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import PageHeader from '../components/ui/PageHeader';
+import Card from '../components/ui/Card';
+import Button from '../components/ui/Button';
+import Badge from '../components/ui/Badge';
+import { Plus, Pencil, Trash2, X, MessageSquare, Calendar as CalendarIcon, Home } from 'lucide-react';
 
 const Complaints = () => {
   const isAdmin = localStorage.getItem('admin') && localStorage.getItem('token');
   const [complaints, setComplaints] = useState([]);
   const [selectedComplaintId, setSelectedComplaintId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [modalMode, setModalMode] = useState('create'); // 'create', 'edit', 'delete'
+  const [modalMode, setModalMode] = useState('create');
   const [formData, setFormData] = useState({
     detail: '',
     category: '',
@@ -59,6 +64,11 @@ const Complaints = () => {
     e.preventDefault();
     const token = localStorage.getItem('token');
 
+    if (!formData.category || !formData.detail) {
+      alert("Please fill all required fields.");
+      return;
+    }
+
     try {
       if (modalMode === 'create') {
         await axios.post(`https://${import.meta.env.VITE_BACKEND_URL}/api/complaints/create`, formData, {
@@ -74,9 +84,11 @@ const Complaints = () => {
         );
       }
       closeModal();
+      // Use window.location.reload() as requested to preserve existing logic flow
       window.location.reload();
     } catch (error) {
       console.error('Error submitting complaint:', error);
+      alert("Failed to submit complaint. Please try again.");
     }
   };
 
@@ -94,147 +106,131 @@ const Complaints = () => {
   };
 
   return (
-    <div className="w-full md:w-4/5 p-6 md:p-8 relative animate-gradientFade">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-        <div>
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent">
-            Complaint Dashboard
-          </h2>
-          <p className="text-lg bg-gradient-to-r from-red-600 to-pink-600 bg-clip-text text-transparent mt-2 animate-slideIn">
-            Monitor and address community <br />complaints efficiently.
-          </p>
-        </div>
-        <button
-          onClick={() => openModal('create')}
-          disabled={isAdmin}
-          className={` ${isAdmin && "hidden"} mt-4 md:mt-0 bg-gradient-to-r from-red-600 to-pink-500 text-white px-5 py-2 rounded-lg text-sm font-medium flex items-center justify-center space-x-2 transition-colors duration-200 ${
-            !isAdmin ? '' : 'opacity-50 cursor-not-allowed'
-          }`}
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-          </svg>
-          <span>Lodge Complaint</span>
-        </button>
-      </div>
+    <div className="p-6 space-y-6">
+      <PageHeader 
+        title="Complaints" 
+        subtitle="Manage and track society-wide complaints and issues."
+      >
+        {!isAdmin && (
+          <Button variant="outline" className="gap-2 h-10 px-4 text-xs" onClick={() => openModal('create')}>
+            <Plus className="w-3.5 h-3.5" />
+            LODGE COMPLAINT
+          </Button>
+        )}
+      </PageHeader>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {complaints.map((complaint, index) => (
-          <div
-            key={complaint.id}
-            className="bg-gradient-to-r from-red-400 to-pink-500 text-white p-6 rounded-xl transition-colors duration-300 relative"
-            style={{ animationDelay: `${index * 0.1}s` }}
-          >
-            <div className='h-fit w-fit'>
-              <h3 className="text-[22px]">
-                {complaint.houseNo}, {new Date(complaint.date).toLocaleDateString('en-GB', {
-                  day: 'numeric',
-                  month: 'long',
-                  year: 'numeric'
-                })}
-              </h3>
-              <hr className='border-gray-200 mt-1'/>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {complaints.map((complaint) => (
+          <Card key={complaint._id} className="flex flex-col h-full group">
+            <div className="flex justify-between items-start mb-4">
+              <Badge variant="outline" className="text-[10px] font-medium tracking-wider">
+                {complaint.category.toUpperCase()}
+              </Badge>
+              <div className="flex items-center gap-1.5 text-mistral-black/60">
+                <CalendarIcon className="w-3 h-3" />
+                <span className="text-[10px] font-medium">
+                  {new Date(complaint.date).toLocaleDateString('en-GB')}
+                </span>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2 mb-3 text-mistral-black/70">
+              <Home className="w-3.5 h-3.5" />
+              <span className="text-xs font-semibold tracking-tight">HOUSE {complaint.houseNo}</span>
             </div>
 
-            <p className="text-lg mt-2">Category: {complaint.category}</p>
-            {complaint.detail && (
-              <p className="text-lg mt-1">
-                {complaint.detail.slice(0, 70)}{complaint.detail.length > 70 ? '...' : ''}
-              </p>
-            )}
+            <p className="text-sm text-foreground/80 leading-relaxed mb-6 flex-1 line-clamp-4">
+              {complaint.detail}
+            </p>
+
             {!isAdmin && (
-              <div className="mt-3 flex gap-4">
-                <div
-                  onClick={() => openModal('edit', complaint)}
-                  className="py-1 px-3 shadow-xl text-lg rounded-xl cursor-pointer text-black hover:bg-gray-200 bg-gray-100"
-                >
-                  ✏️ Edit
-                </div>
-                <div
-                  onClick={() => openModal('delete', complaint)}
-                  className="py-1 px-3 text-black text-lg hover:bg-gray-200 bg-gray-100 shadow-xl rounded-xl cursor-pointer"
-                >
-                  ❌ Delete
-                </div>
+              <div className="flex gap-2 pt-4 border-t border-border mt-auto transition-colors">
+                <Button variant="outline" className="flex-1 h-9 py-0 text-[10px]" onClick={() => openModal('edit', complaint)}>
+                  <Pencil className="w-3 h-3 mr-2" />
+                  EDIT
+                </Button>
+                <Button variant="ghost" className="flex-1 h-9 py-0 text-[10px] text-brand-orange opacity-100" onClick={() => openModal('delete', complaint)}>
+                  <Trash2 className="w-3 h-3 mr-2" />
+                  DELETE
+                </Button>
               </div>
             )}
-          </div>
+          </Card>
         ))}
+
+        {complaints.length === 0 && (
+          <div className="col-span-full py-20 text-center border-2 border-dashed border-border rounded-2xl">
+            <MessageSquare className="w-10 h-10 text-mistral-black/20 mx-auto mb-4" />
+            <p className="text-sm text-mistral-black/60 font-medium uppercase tracking-widest">No complaints found</p>
+          </div>
+        )}
       </div>
 
       {isModalVisible && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="border-2 border-transparent bg-gradient-to-r from-red-500 to-pink-500 p-1 rounded-lg animate-slideIn">
-            <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
-              {modalMode === 'delete' ? (
-                <>
-                  <h3 className="text-xl font-semibold text-gray-800 text-center">Confirm Delete</h3>
-                  <p className="text-sm text-center text-gray-600 mt-4">
-                    Are you sure you want to delete this complaint?
-                  </p>
-                  <div className="flex mt-6 gap-4 justify-center">
-                    <button
-                      onClick={handleDelete}
-                      className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm"
-                    >
-                      Yes, Delete
-                    </button>
-                    <button
-                      onClick={closeModal}
-                      className="bg-gray-300 text-black px-4 py-2 rounded-lg text-sm"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <h3 className="text-2xl font-semibold text-gray-800 text-center">
-                    {modalMode === 'create' ? 'Lodge Complaint' : 'Edit Complaint'}
-                  </h3>
-                  <form onSubmit={handleFormSubmit} className="space-y-4 mt-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Category</label>
-                      <select className='mt-1 block w-full p-2 border border-gray-300 rounded-lg text-sm' name="category" value={formData.category} onChange={handleFormChange}>
-                        <option value="">Select category</option>
-                        <option value="Water">Water</option>
-                        <option value="Electricity">Electricity</option>
-                        <option value="Security">Security</option>
-                        <option value="Garbage">Garbage</option>
-                        <option value="Billing">Billing</option>
-                        <option value="Noise">Noise</option>
-                        <option value="Maintainance">Maintainance</option>
-                      </select>
+        <div 
+          className="fixed inset-0 bg-mistral-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-6"
+          onClick={closeModal}
+        >
+          <Card 
+            className="max-w-md w-full relative shadow-2xl animate-in fade-in zoom-in duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button onClick={closeModal} className="absolute top-5 right-5 p-2 hover:bg-mistral-black/5 rounded-lg transition-colors">
+              <X className="w-4 h-4 text-mistral-black" />
+            </button>
 
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">detail</label>
-                      <textarea
-                        name="detail"
-                        value={formData.detail}
-                        onChange={handleFormChange}
-                        rows="4"
-                        required
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-lg text-sm"
-                      ></textarea>
-                    </div>
-                    <button
-                      type="submit"
-                      className="w-full bg-gradient-to-r from-red-600 to-pink-600 text-white py-2 px-4 rounded-lg font-semibold"
+            {modalMode === 'delete' ? (
+              <div className="py-4 text-center">
+                <div className="w-12 h-12 bg-brand-orange/20 flex items-center justify-center mx-auto mb-5 rounded-xl">
+                  <Trash2 className="w-6 h-6 text-brand-orange" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Confirm Delete</h3>
+                <p className="text-sm text-mistral-black/70 mb-8 font-medium leading-relaxed">Are you sure you want to remove this complaint? This action cannot be undone.</p>
+                <div className="flex gap-3">
+                  <Button variant="outline" className="flex-1 h-11" onClick={closeModal}>CANCEL</Button>
+                  <Button variant="brand" className="flex-1 h-11" onClick={handleDelete}>DELETE</Button>
+                </div>
+              </div>
+            ) : (
+              <div className="py-2">
+                <h3 className="text-xl font-semibold mb-6">
+                  {modalMode === 'create' ? 'Lodge Complaint' : 'Edit Complaint'}
+                </h3>
+                <form onSubmit={handleFormSubmit} className="space-y-5">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-mistral-black/70 ml-1">Category</label>
+                    <select 
+                      name="category" 
+                      value={formData.category} 
+                      onChange={handleFormChange}
+                      required
+                      className="w-full bg-white border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all font-medium text-foreground"
                     >
-                      {modalMode === 'create' ? 'Submit Complaint' : 'Update Complaint'}
-                    </button>
-                  </form>
-                  <button
-                    onClick={closeModal}
-                    className="mt-4 w-full bg-gradient-to-r from-gray-600 to-gray-800 text-white px-4 py-2 rounded-lg text-sm"
-                  >
-                    Close
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
+                      <option value="">Select Category</option>
+                      {["Water", "Electricity", "Security", "Garbage", "Billing", "Noise", "Maintenance"].map(cat => (
+                        <option key={cat} value={cat}>{cat.toUpperCase()}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-mistral-black/70 ml-1">Detail</label>
+                    <textarea
+                      name="detail"
+                      value={formData.detail}
+                      onChange={handleFormChange}
+                      rows="4"
+                      required
+                      placeholder="Describe your issue in detail..."
+                      className="w-full bg-white border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all resize-none font-medium text-foreground"
+                    ></textarea>
+                  </div>
+                  <Button type="submit" variant="outline" className="w-full h-12 mt-2">
+                    {modalMode === 'create' ? 'SUBMIT COMPLAINT' : 'UPDATE COMPLAINT'}
+                  </Button>
+                </form>
+              </div>
+            )}
+          </Card>
         </div>
       )}
     </div>

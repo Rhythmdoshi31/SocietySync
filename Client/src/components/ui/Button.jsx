@@ -2,21 +2,21 @@ import React from 'react';
 
 const variants = {
   primary:
-    'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/35',
+    'bg-mistral-black text-white hover:bg-black',
   secondary:
-    'border border-indigo-200 bg-white text-indigo-700 hover:bg-indigo-50',
-  ghost: 'text-slate-700 hover:bg-slate-100',
-  ethereal:
-    'border border-white/[0.12] bg-white/[0.04] text-[#e8e6e3] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] hover:border-white/[0.18] hover:bg-white/[0.07]',
-  etherealSolid:
-    'bg-[#e8e6e3] text-[#0a0a0b] hover:bg-white border border-white/10',
-  etherealGhost: 'text-[#a8a6a1] hover:text-[#e8e6e3] hover:bg-white/[0.04]',
+    'bg-warm-cream text-mistral-black hover:bg-[#ffe8a3]',
+  ghost: 
+    'bg-mistral-black/10 text-mistral-black hover:bg-mistral-black/20',
+  outline:
+    'border border-mistral-black/40 bg-transparent text-mistral-black hover:bg-mistral-black/5',
+  brand:
+    'bg-brand-orange text-white hover:bg-brand-flame',
 };
 
 const Button = ({ as: Comp = 'button', variant = 'primary', className = '', ...props }) => {
   return (
     <Comp
-      className={`inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-medium transition-all duration-500 hover:-translate-y-0.5 ${variants[variant] ?? variants.primary} ${className}`}
+      className={`inline-flex items-center justify-center px-6 py-3 text-sm font-normal tracking-tight uppercase transition-all duration-300 active:scale-[0.98] ${variants[variant] ?? variants.primary} ${className}`}
       {...props}
     />
   );

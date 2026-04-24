@@ -1,5 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { Pencil } from "lucide-react";
+import { Pencil, Camera, Mail, Home, User as UserIcon, Save, X, Shield, Calendar } from "lucide-react";
+import PageHeader from "../components/ui/PageHeader";
+import Card from "../components/ui/Card";
+import Button from "../components/ui/Button";
+import Badge from "../components/ui/Badge";
 
 export default function Me() {
   const [editingPic, setEditingPic] = useState(false);
@@ -52,15 +56,12 @@ export default function Me() {
           throw new Error("Failed to upload profile picture");
         }
         const data = await response.json();
-        setProfilePic(`${data.profilePictureUrl}?t=${Date.now()}`); // Append a timestamp to prevent caching
-      
-        //      setPreviewPic(null);    ISKE SATH IT DIDNT SHOW IMAGE UNTIL RELOAD...
+        setProfilePic(`${data.profilePictureUrl}?t=${Date.now()}`); 
         setSelectedFile(null);
         setEditingPic(false);
       } catch (error) {
         console.error("Error uploading profile picture:", error);
       }
-      
   };
 
   const handleEditDetails = () => {
@@ -69,8 +70,9 @@ export default function Me() {
     setForm({ ...form, password: "", confirmPassword: "" });
   };
 
-  const toggleEditing = () => {
+  const toggleEditingPic = () => {
     setEditingPic(!editingPic);
+    if (editingPic) setPreviewPic(null);
   };
 
   const validateForm = () => {
@@ -79,13 +81,11 @@ export default function Me() {
         alert("All fields are required");
         return false;
       }
-
       if (form.password !== "" && form.password !== form.confirmPassword) {
         alert("Passwords do not match");
         return false;
       }
     }
-
     return true;
   };
 
@@ -96,10 +96,6 @@ export default function Me() {
       const updatedFields = {};
 
       if (form.password && form.password !== "********" && form.password !== initialForm.password) {
-        if (form.password !== form.confirmPassword) {
-          alert("Passwords do not match");
-          return;
-        }
         updatedFields.password = form.password;
       }
 
@@ -129,16 +125,15 @@ export default function Me() {
         throw new Error(data.message || "Something went wrong");
       }
 
-      if (updatedFields.password) updatedFields.password = "********";
-
       setForm((prev) => ({
         ...prev,
-        ...updatedFields,
+        password: "********",
         confirmPassword: "",
       }));
       setInitialForm((prev) => ({
         ...prev,
         ...updatedFields,
+        password: "********",
         confirmPassword: "",
       }));
       setEditingDetails(false);
@@ -155,6 +150,7 @@ export default function Me() {
       alert(error.message);
     }
   };
+
   const handleDiscardChanges = () => {
     setForm({ ...initialForm, confirmPassword: "" });
     setEditingDetails(false);
@@ -194,7 +190,6 @@ export default function Me() {
             }
           );
           if (!response.ok) throw new Error("Failed to fetch profile picture");
-      
           const blob = await response.blob();
           const objectUrl = URL.createObjectURL(blob);
           setProfilePic(objectUrl);
@@ -203,37 +198,54 @@ export default function Me() {
           setProfilePic("https://via.placeholder.com/120");
         }
       };
-  
-      fetchAndSetProfilePic(userObj.id);
+      if (userObj.id) fetchAndSetProfilePic(userObj.id);
     }
   }, []);
-  
 
   if (!user) {
-    return <p>Loading...</p>;
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <p className="text-[10px] uppercase tracking-[0.3em] text-mistral-black/20 animate-pulse font-bold">Loading Profile...</p>
+      </div>
+    );
   }
 
   return (
-    <div className="flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-100 p-12 px-3">
-      <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl p-8">
-        <div className="flex flex-col items-center">
-          <h1 className="text-xl text-center font-semibold tracking-wide underline shadow-lg mb-4">Manage Your Information</h1>
-          <div className="relative">
-            <img
-              src={previewPic || profilePic}
-              alt="Profile"
-              className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-md"
-            />
+    <div className="p-6 space-y-6">
+      <PageHeader 
+        title="Account Settings" 
+        subtitle="Manage your personal profile and account security."
+      />
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Profile Card */}
+        <Card className="lg:col-span-4 flex flex-col items-center text-center py-10">
+          <div className="relative group mb-6">
+            <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-brand-orange/20 p-1 bg-white shadow-inner">
+              <img
+                src={previewPic || profilePic}
+                alt="Profile"
+                className="w-full h-full rounded-full object-cover transition-all duration-500"
+              />
+            </div>
             <button
-              onClick={toggleEditing}
-              className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full shadow hover:bg-blue-700"
+              onClick={toggleEditingPic}
+              className="absolute bottom-1 right-1 bg-mistral-black text-white p-2.5 rounded-xl shadow-lg hover:bg-brand-orange transition-all duration-200 active:scale-95"
             >
-              <Pencil size={16} />
+              <Camera size={14} />
             </button>
           </div>
 
+          <div className="space-y-1.5 mb-8">
+            <h3 className="text-xl font-bold tracking-tight text-foreground">{form.name}</h3>
+            <div className="flex items-center justify-center gap-2">
+              <Badge variant="brand" className="h-5 text-[9px] px-2 font-bold uppercase tracking-wider">Resident</Badge>
+              <span className="text-[10px] font-bold tracking-widest text-mistral-black/60 uppercase">Flat {form.houseNo}</span>
+            </div>
+          </div>
+
           {editingPic && (
-            <>
+            <div className="w-full space-y-3 px-6 animate-in fade-in slide-in-from-top-2 duration-300">
               <input
                 type="file"
                 accept="image/*"
@@ -241,102 +253,125 @@ export default function Me() {
                 className="hidden"
                 onChange={handleImageUpload}
               />
-              {previewPic ? (
-                <div className="mt-4 flex gap-3">
-                  <button
-                    className="px-4 py-1 text-sm bg-gray-300 rounded-full hover:bg-gray-400"
-                    onClick={() => fileInputRef.current.click()}
-                  >
-                    Reupload
-                  </button>
-                  <button
-                    className="px-4 py-1 text-sm bg-green-600 text-white rounded-full hover:bg-green-700"
-                    onClick={handleSavePic}
-                  >
-                    Save
-                  </button>
-                </div>
+              {!previewPic ? (
+                <Button variant="outline" className="w-full h-10 text-[10px] font-bold tracking-widest" onClick={() => fileInputRef.current.click()}>
+                  SELECT NEW PHOTO
+                </Button>
               ) : (
-                <button
-                  className="mt-4 px-4 py-1 text-sm bg-blue-600 text-white rounded-full hover:bg-blue-700"
-                  onClick={() => fileInputRef.current.click()}
-                >
-                  Upload New Photo
-                </button>
+                <div className="flex gap-2">
+                  <Button variant="brand" className="flex-1 h-10 text-[10px] font-bold" onClick={handleSavePic}>SAVE</Button>
+                  <Button variant="outline" className="flex-1 h-10 text-[10px] font-bold" onClick={() => setPreviewPic(null)}>RESET</Button>
+                </div>
               )}
-            </>
-          )}
-        </div>
-
-        <div className="mt-10 space-y-4">
-          {["name", "houseNo", "email"].map((field) => (
-            <div key={field}>
-              <label className="block text-sm text-gray-700 capitalize mb-1">{field}</label>
-              <input
-                type="text"
-                name={field}
-                value={form[field]}
-                onChange={handleChange}
-                disabled={!editingDetails}
-                className={`w-full px-4 py-2 rounded-xl border ${
-                  editingDetails
-                    ? "border-blue-400 focus:outline-blue-500"
-                    : "bg-gray-100 text-gray-500"
-                }`}
-              />
             </div>
-          ))}
+          )}
 
-          {editingDetails && (
-            <>
-              <div>
-                <label className="block text-sm text-gray-700 mb-1">New Password</label>
+          <div className="w-full pt-8 mt-4 border-t border-border space-y-4 px-6">
+             <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-mistral-black/60">
+                <span className="flex items-center gap-2"><Calendar size={12}/> Joined</span>
+                <span className="text-foreground">APRIL 2024</span>
+             </div>
+             <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-mistral-black/60">
+                <span className="flex items-center gap-2"><Shield size={12}/> Security</span>
+                <span className="text-emerald-600 font-bold">VERIFIED</span>
+             </div>
+          </div>
+        </Card>
+
+        {/* Details Card */}
+        <Card className="lg:col-span-8">
+          <div className="flex items-center justify-between mb-8 border-b border-border pb-6">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-mistral-black/60">Personal Details</h3>
+            {!editingDetails ? (
+              <Button variant="outline" className="h-9 px-4 text-[10px] font-bold gap-2" onClick={handleEditDetails}>
+                <Pencil size={12} />
+                EDIT PROFILE
+              </Button>
+            ) : (
+              <div className="flex gap-2">
+                <Button variant="ghost" className="h-9 px-4 text-[10px] font-bold text-brand-orange opacity-100" onClick={handleDiscardChanges}>
+                  DISCARD
+                </Button>
+                <Button variant="brand" className="h-9 px-4 text-[10px] font-bold" onClick={handleSaveDetails}>
+                  SAVE CHANGES
+                </Button>
+              </div>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-mistral-black/70 ml-1">Full Name</label>
+              <div className="relative">
+                <UserIcon size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-mistral-black/40" />
                 <input
-                  type="password"
-                  name="password"
-                  placeholder="********"
-                  value={form.password}
+                  type="text"
+                  name="name"
+                  value={form.name}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 rounded-xl border border-blue-400 focus:outline-blue-500"
+                  disabled={!editingDetails}
+                  className="w-full bg-white border border-border rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange disabled:bg-gray-50 disabled:border-transparent transition-all font-bold text-foreground"
                 />
               </div>
-              <div>
-                <label className="block text-sm text-gray-700 mb-1">Confirm Password</label>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-mistral-black/70 ml-1">Email Address</label>
+              <div className="relative">
+                <Mail size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-mistral-black/40" />
                 <input
-                  type="password"
-                  name="confirmPassword"
-                  value={form.confirmPassword}
+                  type="email"
+                  name="email"
+                  value={form.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-2 rounded-xl border border-blue-400 focus:outline-blue-500"
+                  disabled={!editingDetails}
+                  className="w-full bg-white border border-border rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange disabled:bg-gray-50 disabled:border-transparent transition-all font-bold text-foreground"
                 />
               </div>
-            </>
-          )}
-
-          {editingDetails ? (
-            <div className="flex justify-end gap-4 mt-6">
-              <button
-                onClick={handleDiscardChanges}
-                className="px-6 py-2 rounded-full font-medium bg-red-500 text-white hover:bg-red-600"
-              >
-                Discard
-              </button>
-              <button
-                onClick={handleSaveDetails}
-                className="px-6 py-2 rounded-full font-medium bg-blue-600 text-white hover:bg-blue-700"
-              >
-                Save Details
-              </button>
             </div>
-          ) : (
-            <button
-              onClick={handleEditDetails}
-              className="px-6 py-2 rounded-full font-medium bg-blue-600 text-white hover:bg-blue-700"
-            >
-              Edit Details
-            </button>
-          )}
-        </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-mistral-black/70 ml-1">Flat Number</label>
+              <div className="relative">
+                <Home size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-mistral-black/40" />
+                <input
+                  type="text"
+                  name="houseNo"
+                  value={form.houseNo}
+                  onChange={handleChange}
+                  disabled={!editingDetails}
+                  className="w-full bg-white border border-border rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange disabled:bg-gray-50 disabled:border-transparent transition-all font-bold text-foreground"
+                />
+              </div>
+            </div>
+
+            {editingDetails && (
+              <>
+                <div className="space-y-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-mistral-black/70 ml-1">New Password</label>
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="Enter new password"
+                    value={form.password}
+                    onChange={handleChange}
+                    className="w-full bg-white border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all font-bold text-foreground"
+                  />
+                </div>
+                <div className="space-y-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-mistral-black/70 ml-1">Confirm Password</label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={form.confirmPassword}
+                    onChange={handleChange}
+                    className="w-full bg-white border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all font-bold text-foreground"
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        </Card>
       </div>
     </div>
   );

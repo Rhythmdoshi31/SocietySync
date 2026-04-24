@@ -1,5 +1,10 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import PageHeader from '../components/ui/PageHeader';
+import Card from '../components/ui/Card';
+import Button from '../components/ui/Button';
+import Badge from '../components/ui/Badge';
+import { Calendar as CalendarIcon, MapPin, Plus, Pencil, Trash2, X, Clock, Info } from 'lucide-react';
 
 const Events = () => {
   const isAdmin = localStorage.getItem('admin') && localStorage.getItem('token');
@@ -91,177 +96,181 @@ const Events = () => {
   };
 
   return (
-    <div className="w-full md:w-4/5 p-6 md:p-8 relative animate-gradientFade">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <div>
-          <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent">
-            Society Events
-          </h2>
-          <p className="text-md bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent mt-2 animate-slideIn">
-            View and manage upcoming community <br />events with excitement.
-          </p>
-        </div>
-        <button
-          onClick={() => openModal('create')}
-          className={`${isAdmin || "hidden"} mt-4 md:mt-0 bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-5 py-2 rounded-lg text-sm font-medium flex items-center justify-center space-x-2 transition-colors duration-200 ${
-            isAdmin ? '' : 'opacity-50 cursor-not-allowed'
-          }`}
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-          </svg>
-          <span>Create Event</span>
-        </button>
+    <div className="p-6 space-y-6">
+      <PageHeader 
+        title="Events" 
+        subtitle="Discover upcoming gatherings and meetings in the society."
+      >
+        {isAdmin && (
+          <Button variant="brand" className="gap-2 h-10 px-4 text-xs" onClick={() => openModal('create')}>
+            <Plus className="w-3.5 h-3.5" />
+            CREATE EVENT
+          </Button>
+        )}
+      </PageHeader>
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {events.map((event) => (
+          <Card 
+            key={event._id} 
+            className="group flex flex-col h-full"
+          >
+            <div className="flex justify-between items-start mb-5">
+              <div className="p-2.5 rounded-xl bg-mistral-black/10 text-mistral-black group-hover:bg-mistral-black group-hover:text-white transition-colors">
+                <CalendarIcon className="w-4 h-4" />
+              </div>
+              <Badge variant="brand" className="text-[10px] tracking-wider font-bold">UPCOMING</Badge>
+            </div>
+
+            <h3 className="text-lg font-semibold text-foreground mb-3 leading-tight">{event.title}</h3>
+            
+            <div className="space-y-2 mb-6 flex-1">
+              <div className="flex items-center gap-2.5 text-xs text-mistral-black/70 font-bold">
+                <Clock className="w-3.5 h-3.5" />
+                {new Date(event.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+              </div>
+              <div className="flex items-center gap-2.5 text-xs text-mistral-black/70 font-bold">
+                <MapPin className="w-3.5 h-3.5" />
+                {event.venue}
+              </div>
+            </div>
+
+            <div className="flex gap-2 pt-4 border-t border-border mt-auto">
+              <Button variant="outline" className="flex-1 h-9 py-0 text-[10px]" onClick={() => openModal('view', event)}>
+                <Info className="w-3 h-3 mr-2" />
+                DETAILS
+              </Button>
+              {isAdmin && (
+                <div className="flex gap-2 w-full">
+                  <Button variant="ghost" className="p-2 h-9 text-mistral-black/40 hover:text-mistral-black opacity-100" onClick={() => openModal('edit', event)}>
+                    <Pencil className="w-3.5 h-3.5" />
+                  </Button>
+                  <Button variant="ghost" className="p-2 h-9 text-mistral-black/40 hover:text-brand-orange opacity-100" onClick={() => openModal('delete', event)}>
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </Button>
+                </div>
+              )}
+            </div>
+          </Card>
+        ))}
+
+        {events.length === 0 && (
+          <div className="col-span-full py-20 text-center border-2 border-dashed border-border rounded-2xl">
+            <CalendarIcon className="w-10 h-10 text-mistral-black/20 mx-auto mb-4" />
+            <p className="text-sm text-mistral-black/60 font-bold uppercase tracking-widest">No upcoming events</p>
+          </div>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {events.map((event, index) => (
-          <div
-            key={event._id}
-            onClick={() => openModal('view', event)}
-            className="bg-gradient-to-r from-cyan-500 to-purple-500 text-white px-4 py-6 rounded-xl transition-colors duration-300 cursor-pointer relative overflow-hidden"
-            style={{ animationDelay: `${index * 0.1}s` }}
+      {isModalVisible && (
+        <div 
+          className="fixed inset-0 bg-mistral-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-6"
+          onClick={closeModal}
+        >
+          <Card 
+            className="max-w-md w-full relative shadow-2xl animate-in fade-in zoom-in duration-200"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div className='w-fit'>
-              <h3 className="text-2xl font-semibold bg-gradient-to-r from-white to-gray-200 bg-clip-text text-transparent">
-                {event.title}
-              </h3>
-              <hr className='border-gray-200 mt-1'/>
-            </div>
-            <p className="text-lg mt-2">Venue: {event.venue}</p>
-            <p className="text-lg mt-1">Date: {event.date}</p>
-            {event.description && (
-              <p className="text-lg mt-1">
-                {event.description.slice(0, 70)}{event.description.length > 70 ? '...' : ''}
-              </p>
-            )}
-            {isAdmin && (
-              <div
-                className='mt-2 flex items-center justify-start gap-4'
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div
-                  onClick={() => openModal('edit', event)}
-                  className='py-1 px-3 text-black text-lg hover:bg-gray-200 bg-gray-100 shadow-xl rounded-xl cursor-pointer'
-                >
-                  ✏️ Edit
+            <button onClick={closeModal} className="absolute top-5 right-5 p-2 hover:bg-mistral-black/5 rounded-lg transition-colors">
+              <X className="w-4 h-4 text-mistral-black" />
+            </button>
+
+            {modalMode === 'delete' ? (
+              <div className="py-4 text-center">
+                <div className="w-12 h-12 bg-brand-orange/10 flex items-center justify-center mx-auto mb-5 rounded-xl">
+                  <Trash2 className="w-6 h-6 text-brand-orange" />
                 </div>
-                <div
-                  onClick={() => openModal('delete', event)}
-                  className='py-1 px-3 text-black text-lg hover:bg-gray-200 bg-gray-100 shadow-xl rounded-xl cursor-pointer'
-                >
-                  ❌ Delete
+                <h3 className="text-xl font-bold mb-2">Cancel Event</h3>
+                <p className="text-sm text-mistral-black/70 mb-8 font-medium leading-relaxed">Are you sure you want to cancel and remove this event? This cannot be undone.</p>
+                <div className="flex gap-3">
+                  <Button variant="outline" className="flex-1 h-11" onClick={closeModal}>BACK</Button>
+                  <Button variant="brand" className="flex-1 h-11" onClick={handleDelete}>DELETE</Button>
                 </div>
               </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {isModalVisible && selectedEvent && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="border-2 border-transparent bg-gradient-to-r from-cyan-500 to-purple-500 p-1 rounded-lg animate-slideIn">
-            <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4">
-              {modalMode === 'delete' ? (
-                <>
-                  <h3 className="text-xl font-semibold text-gray-800 text-center">Confirm Delete</h3>
-                  <p className="text-sm text-center text-gray-600 mt-4">
-                    Are you sure you want to delete this event?
-                  </p>
-                  <div className="flex mt-6 gap-4 justify-center">
-                    <button
-                      onClick={handleDelete}
-                      className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm"
-                    >
-                      Yes, Delete
-                    </button>
-                    <button
-                      onClick={closeModal}
-                      className="bg-gray-300 text-black px-4 py-2 rounded-lg text-sm"
-                    >
-                      Cancel
-                    </button>
+            ) : modalMode === 'view' ? (
+              <div className="py-2">
+                <Badge variant="brand" className="mb-4 text-[9px] h-5 px-2">EVENT DETAILS</Badge>
+                <h3 className="text-2xl font-bold mb-6 leading-tight">{selectedEvent.title}</h3>
+                <div className="grid grid-cols-2 gap-3 mb-6">
+                  <div className="p-3.5 bg-warm-ivory border border-border rounded-xl">
+                    <p className="text-[10px] font-bold text-mistral-black/50 mb-1 uppercase tracking-wider">Date</p>
+                    <p className="text-xs font-bold">{new Date(selectedEvent.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
                   </div>
-                </>
-              ) : modalMode === 'view' ? (
-                <>
-                  <h3 className="text-2xl font-bold text-center text-gray-800">{selectedEvent.title}</h3>
-                  <p className="mt-2 text-center text-gray-600">{selectedEvent.date} | {selectedEvent.venue}</p>
-                  <hr className="my-4" />
-                  <p className="text-gray-700 whitespace-pre-line">{selectedEvent.description}</p>
-                  <button
-                    onClick={closeModal}
-                    className="mt-6 w-full bg-gradient-to-r from-red-600 to-rose-600 text-white px-4 py-2 rounded-lg text-sm"
-                  >
-                    Close
-                  </button>
-                </>
-              ) : (
-                <>
-                  <h3 className="text-2xl font-semibold text-gray-800 text-center">
-                    {modalMode === 'create' ? 'Create an Event' : 'Edit Event'}
-                  </h3>
-                  <form onSubmit={handleFormSubmit} className="space-y-4 mt-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Event Title</label>
-                      <input
-                        type="text"
-                        name="title"
-                        value={formData.title}
-                        onChange={handleFormChange}
-                        required
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-lg text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Description</label>
-                      <textarea
-                        name="description"
-                        value={formData.description}
-                        onChange={handleFormChange}
-                        rows="4"
-                        required
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-lg text-sm"
-                      ></textarea>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Date</label>
+                  <div className="p-3.5 bg-warm-ivory border border-border rounded-xl">
+                    <p className="text-[10px] font-bold text-mistral-black/50 mb-1 uppercase tracking-wider">Venue</p>
+                    <p className="text-xs font-bold">{selectedEvent.venue}</p>
+                  </div>
+                </div>
+                <div className="mb-8">
+                  <p className="text-[10px] font-bold text-mistral-black/50 mb-2 uppercase tracking-wider">About the Event</p>
+                  <p className="text-sm text-mistral-black/80 leading-relaxed whitespace-pre-line font-medium">
+                    {selectedEvent.description}
+                  </p>
+                </div>
+                <Button variant="primary" className="w-full h-11" onClick={closeModal}>CLOSE</Button>
+              </div>
+            ) : (
+              <div className="py-2">
+                <h3 className="text-xl font-semibold mb-6">
+                  {modalMode === 'create' ? 'Create Event' : 'Edit Event'}
+                </h3>
+                <form onSubmit={handleFormSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-mistral-black/40 ml-1">Title</label>
+                    <input
+                      type="text"
+                      name="title"
+                      value={formData.title}
+                      onChange={handleFormChange}
+                      required
+                      placeholder="Event name"
+                      className="w-full bg-white border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all font-medium text-foreground"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase tracking-wider text-mistral-black/40 ml-1">Description</label>
+                    <textarea
+                      name="description"
+                      value={formData.description}
+                      onChange={handleFormChange}
+                      rows="3"
+                      required
+                      placeholder="What is this event about?"
+                      className="w-full bg-white border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all resize-none font-medium text-foreground"
+                    ></textarea>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-mistral-black/40 ml-1">Date</label>
                       <input
                         type="date"
                         name="date"
                         value={formData.date}
                         onChange={handleFormChange}
                         required
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-lg text-sm"
+                        className="w-full bg-white border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all font-medium text-foreground"
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Venue</label>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-mistral-black/40 ml-1">Venue</label>
                       <input
                         type="text"
                         name="venue"
                         value={formData.venue}
                         onChange={handleFormChange}
-                        className="mt-1 block w-full p-2 border border-gray-300 rounded-lg text-sm"
+                        required
+                        placeholder="Location"
+                        className="w-full bg-white border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all font-medium text-foreground"
                       />
                     </div>
-                    <button
-                      type="submit"
-                      className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white py-2 px-4 rounded-lg font-semibold"
-                    >
-                      {modalMode === 'create' ? 'Create Event' : 'Update Event'}
-                    </button>
-                  </form>
-                  <button
-                    onClick={closeModal}
-                    className="mt-4 w-full bg-gradient-to-r from-red-600 to-rose-600 text-white px-4 py-2 rounded-lg text-sm"
-                  >
-                    Close
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
+                  </div>
+                  <Button type="submit" variant="brand" className="w-full h-12 mt-4 uppercase">
+                    {modalMode === 'create' ? 'Post Event' : 'Save Changes'}
+                  </Button>
+                </form>
+              </div>
+            )}
+          </Card>
         </div>
       )}
     </div>

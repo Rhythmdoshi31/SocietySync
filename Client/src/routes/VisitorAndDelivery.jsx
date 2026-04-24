@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
+import PageHeader from '../components/ui/PageHeader';
+import Card from '../components/ui/Card';
+import Badge from '../components/ui/Badge';
+import { User, Package, Clock, MapPin, CheckCircle2, LogOut, ArrowRight, ClipboardList } from 'lucide-react';
 
 const visitorsAndDeliveries = [
   {
     id: 1,
     name: "Ramesh Kumar",
     type: "Visitor",
-    purpose: "Guest visit - Flat 402",
+    purpose: "Guest Visit - Flat 402",
     time: "Today, 3:15 PM",
     status: "entered",
-    photo: "https://images.unsplash.com/photo-1590361818521-0e01eae3df06?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    photo: "https://images.unsplash.com/photo-1590361818521-0e01eae3df06?q=80&w=2940&auto=format&fit=crop",
   },
   {
     id: 2,
@@ -17,16 +21,16 @@ const visitorsAndDeliveries = [
     purpose: "Food Delivery - Flat 210",
     time: "Today, 1:00 PM",
     status: "delivered",
-    photo: "https://images.unsplash.com/photo-1653389527532-884074ac1c65?q=80&w=2924&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    photo: "https://images.unsplash.com/photo-1653389527532-884074ac1c65?q=80&w=2924&auto=format&fit=crop",
   },
   {
     id: 3,
     name: "Sneha Shah",
     type: "Visitor",
-    purpose: "Friend visit - Flat 103",
+    purpose: "Friend Visit - Flat 103",
     time: "Yesterday, 5:30 PM",
     status: "left",
-    photo: "https://images.unsplash.com/photo-1696315289691-5ba9a97cb975?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    photo: "https://images.unsplash.com/photo-1696315289691-5ba9a97cb975?q=80&w=2940&auto=format&fit=crop",
   },
   {
     id: 4,
@@ -35,7 +39,7 @@ const visitorsAndDeliveries = [
     purpose: "Package - Flat 507",
     time: "Yesterday, 12:20 PM",
     status: "delivered",
-    photo: "https://images.unsplash.com/photo-1602359337719-a8bcbd1f7b51?q=80&w=1908&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    photo: "https://images.unsplash.com/photo-1602359337719-a8bcbd1f7b51?q=80&w=1908&auto=format&fit=crop",
   },
 ];
 
@@ -46,57 +50,94 @@ const VisitorsAndDelivery = () => {
     (entry) => entry.type === selectedType
   );
 
-  return (
-    <div className="p-6 min-h-screen bg-white text-gray-800">
-      <div className="flex justify-center gap-8 mb-6">
-        <button
-          onClick={() => setSelectedType('Visitor')}
-          className={`text-xl font-semibold px-4 py-2 rounded-full transition ${
-            selectedType === 'Visitor' ? 'bg-black text-white' : 'bg-gray-200 text-black'
-          }`}
-        >
-          Visitors
-        </button>
-        <button
-          onClick={() => setSelectedType('Delivery')}
-          className={`text-xl font-semibold px-4 py-2 rounded-full transition ${
-            selectedType === 'Delivery' ? 'bg-black text-white' : 'bg-gray-200 text-black'
-          }`}
-        >
-          Deliveries
-        </button>
-      </div>
+  const statusConfig = {
+    entered: { color: 'text-emerald-600', icon: <ArrowRight size={10} />, label: 'Entered' },
+    delivered: { color: 'text-blue-600', icon: <CheckCircle2 size={10} />, label: 'Delivered' },
+    left: { color: 'text-mistral-black/40', icon: <LogOut size={10} />, label: 'Left' },
+  };
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filteredList.map((entry) => (
-          <div
-            key={entry.id}
-            className="relative bg-white text-gray-800 rounded-lg shadow-lg overflow-hidden transition transform hover:scale-105"
-          >
-            <h2
-              className={`absolute right-[3%] top-[3%] z-10 text-xs md:text-sm uppercase bg-black py-1 px-2 rounded-xl ${
-                entry.status === 'entered'
-                  ? 'text-green-300'
-                  : entry.status === 'delivered'
-                  ? 'text-blue-300'
-                  : 'text-yellow-300'
-              }`}
-            >
-              · {entry.status}
-            </h2>
-            <img
-              src={entry.photo}
-              alt={`${entry.name}`}
-              className="w-full h-56 object-cover"
-            />
-            <div className="p-4">
-              <h3 className="text-lg font-semibold">{entry.name}</h3>
-              <p className="text-sm text-gray-600">{entry.type}</p>
-              <p className="text-sm mt-1">{entry.purpose}</p>
-              <p className="text-sm text-gray-500 mt-1">{entry.time}</p>
-            </div>
+  return (
+    <div className="p-6 space-y-6">
+      <PageHeader 
+        title="Visitor Log" 
+        subtitle="Real-time tracking of personnel entering the society."
+      />
+
+      <div className="flex flex-col gap-6">
+        <div className="flex items-center justify-between border-b border-stone-300 pb-4">
+           <div className="flex items-center gap-2 px-1">
+             <ClipboardList className="w-4 h-4 text-stone-700" />
+             <h3 className="text-sm font-bold tracking-widest uppercase text-stone-800">Access Activity</h3>
+           </div>
+           <div className="flex gap-1.5 p-1 bg-stone-200 rounded-xl">
+            {['Visitor', 'Delivery'].map((type) => (
+              <button 
+                key={type}
+                className={`px-5 py-1.5 text-[10px] font-bold uppercase rounded-lg transition-all ${
+                  selectedType === type 
+                  ? 'bg-white text-mistral-black shadow-sm' 
+                  : 'text-mistral-black/60 hover:text-mistral-black'
+                }`}
+                onClick={() => setSelectedType(type)}
+              >
+                {type}s
+              </button>
+            ))}
           </div>
-        ))}
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          {filteredList.map((entry) => (
+            <Card key={entry.id} className="p-0 overflow-hidden group border-border hover:border-mistral-black/20 transition-all">
+              <div className="flex flex-col sm:flex-row h-full">
+                <div className="relative w-full sm:w-48 aspect-[4/5] sm:aspect-auto overflow-hidden bg-warm-ivory border-r border-border">
+                  <img
+                    src={entry.photo}
+                    alt={entry.name}
+                    className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute top-3 left-3">
+                    <Badge variant="brand" className="h-5 text-[9px] px-2 font-bold bg-mistral-black/80 text-white border-none backdrop-blur-sm">
+                      {entry.type === 'Visitor' ? <User size={10} className="mr-1" /> : <Package size={10} className="mr-1" />}
+                      {entry.type.toUpperCase()}
+                    </Badge>
+                  </div>
+                </div>
+                
+                <div className="p-5 flex flex-col flex-1 justify-between">
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className={`text-[10px] tracking-widest font-bold flex items-center gap-1 uppercase ${statusConfig[entry.status].color} opacity-100`}>
+                        {statusConfig[entry.status].icon}
+                        {statusConfig[entry.status].label}
+                      </span>
+                    </div>
+                    <h3 className="text-base font-bold text-foreground leading-tight">{entry.name}</h3>
+                    <p className="text-[11px] text-mistral-black/70 font-semibold leading-relaxed">{entry.purpose}</p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 pt-5 mt-4 border-t border-border">
+                    <div className="flex items-center gap-2 text-mistral-black/60">
+                      <Clock size={12} className="shrink-0" />
+                      <span className="text-[9px] font-bold uppercase tracking-widest truncate">{entry.time}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-mistral-black/60">
+                      <MapPin size={12} className="shrink-0" />
+                      <span className="text-[9px] font-bold uppercase tracking-widest truncate">GATE 01</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        {filteredList.length === 0 && (
+          <div className="py-24 text-center border-2 border-dashed border-border rounded-2xl">
+            <ClipboardList className="w-10 h-10 text-mistral-black/20 mx-auto mb-4" />
+            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-mistral-black/40">No records found</p>
+          </div>
+        )}
       </div>
     </div>
   );

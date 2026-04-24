@@ -1,4 +1,9 @@
 import React, { useState } from 'react';
+import PageHeader from '../components/ui/PageHeader';
+import Card from '../components/ui/Card';
+import Button from '../components/ui/Button';
+import Badge from '../components/ui/Badge';
+import { CreditCard, Wallet, Banknote, Building2, CheckCircle2, Clock, X, Plus, Receipt } from 'lucide-react';
 
 const RentMaintenance = () => {
   const [payments, setPayments] = useState([]);
@@ -11,34 +16,11 @@ const RentMaintenance = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const paymentIcons = {
-    Cash: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 1.343-3 3v2c0 1.657 1.343 3 3 3s3-1.343 3-3v-2c0-1.657-1.343-3-3-3zm0 0v2m-9-2h18M3 12h18" />
-      </svg>
-    ),
-    Online: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-    Card: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-      </svg>
-    ),
-    Bank: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a2 2 0 012-2h2a2 2 0 012 2v5m-4 0h4" />
-      </svg>
-    )
+    Cash: <Banknote className="w-4 h-4" />,
+    Online: <Wallet className="w-4 h-4" />,
+    Card: <CreditCard className="w-4 h-4" />,
+    Bank: <Building2 className="w-4 h-4" />
   };
-
-  const gradients = [
-    'bg-gradient-to-br from-teal-500 to-blue-600',
-    'bg-gradient-to-br from-rose-500 to-pink-600',
-    'bg-gradient-to-br from-lime-500 to-emerald-600',
-    'bg-gradient-to-br from-fuchsia-500 to-purple-600'
-  ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -48,162 +30,171 @@ const RentMaintenance = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setPayments([
-      ...payments,
       {
-        id: payments.length + 1,
+        id: Date.now(),
         ...formData,
-        date: '2025-05-02' // Today's date
-      }
+        date: new Date().toLocaleDateString('en-GB').toUpperCase()
+      },
+      ...payments
     ]);
     setIsModalOpen(true);
   };
 
   return (
-    <div className="w-full md:w-4/5 p-6 md:p-8 relative animate-gradientFade">
-      <style>
-        {`
-          @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-          }
-          @keyframes gradientFade {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-          }
-          .animate-slideIn {
-            animation: slideIn 0.3s ease-out;
-          }
-          .animate-gradientFade {
-            background: linear-gradient(135deg, #e2e8f0, #f1f5f9, #e2e8f0);
-            background-size: 200% 200%;
-            animation: gradientFade 15s ease infinite;
-          }
-        `}
-      </style>
-      <div className="mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-cyan-600 to-purple-600 bg-clip-text text-transparent">
-          Rent & Maintenance Payment
-        </h2>
-        <p className="text-sm text-gray-500 mt-2">Submit your rent or maintenance payments easily.</p>
-      </div>
-      <div className="bg-white p-6 rounded-xl shadow-md mb-8">
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-200"
-                placeholder="Enter your name"
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="apartmentNumber" className="block text-sm font-medium text-gray-700">
-                Apartment Number
-              </label>
-              <input
-                type="text"
-                id="apartmentNumber"
-                name="apartmentNumber"
-                value={formData.apartmentNumber}
-                onChange={handleInputChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-200"
-                placeholder="e.g., A-101"
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="amount" className="block text-sm font-medium text-gray-700">
-                Amount ($)
-              </label>
-              <input
-                type="number"
-                id="amount"
-                name="amount"
-                value={formData.amount}
-                onChange={handleInputChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-200"
-                placeholder="e.g., 500"
-                required
-                min="1"
-              />
-            </div>
-            <div>
-              <label htmlFor="paymentMethod" className="block text-sm font-medium text-gray-700">
-                Payment Method
-              </label>
-              <select
-                id="paymentMethod"
-                name="paymentMethod"
-                value={formData.paymentMethod}
-                onChange={handleInputChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-200"
-              >
-                <option value="Cash">Cash</option>
-                <option value="Online">Online</option>
-                <option value="Card">Card</option>
-                <option value="Bank">Bank</option>
-              </select>
-            </div>
-          </div>
-          <div className="mt-6 flex justify-end">
-            <button
-              type="submit"
-              className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:scale-105 hover:ring-2 hover:ring-cyan-300 transition-all duration-200"
-            >
-              Submit Payment
-            </button>
-          </div>
-        </form>
-      </div>
-      {payments.length > 0 && (
-        <div>
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Payment History</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {payments.map((payment, index) => (
-              <div
-                key={payment.id}
-                className={`${gradients[index % gradients.length]} h-48 text-white p-6 rounded-xl shadow-md hover:shadow-lg hover:scale-105 hover:ring-2 hover:ring-cyan-300 transition-all duration-300 relative overflow-hidden`}
-              >
-                <div className="absolute top-4 left-4">{paymentIcons[payment.paymentMethod]}</div>
-                <h4 className="text-lg font-semibold mt-8">{payment.name}</h4>
-                <p className="text-sm mt-2">Apartment: {payment.apartmentNumber}</p>
-                <p className="text-sm mt-1">Amount: ${payment.amount}</p>
-                <p className="text-sm mt-1">Method: {payment.paymentMethod}</p>
-                <p className="text-sm mt-1">Date: {payment.date}</p>
+    <div className="p-6 space-y-6">
+      <PageHeader 
+        title="Rent & Maintenance" 
+        subtitle="Manage and track your society dues securely."
+      />
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Payment Form */}
+        <div className="lg:col-span-4">
+          <Card className="sticky top-6">
+            <h3 className="text-sm font-bold tracking-widest mb-6 uppercase text-mistral-black/60">New Payment</h3>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold tracking-widest text-mistral-black/40 uppercase ml-1">Full Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className="w-full bg-white border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all font-medium text-foreground"
+                  placeholder="E.g. John Doe"
+                  required
+                />
               </div>
-            ))}
-          </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold tracking-widest text-mistral-black/40 uppercase ml-1">Apartment</label>
+                <input
+                  type="text"
+                  name="apartmentNumber"
+                  value={formData.apartmentNumber}
+                  onChange={handleInputChange}
+                  className="w-full bg-white border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all font-medium text-foreground"
+                  placeholder="E.g. A-101"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold tracking-widest text-mistral-black/40 uppercase ml-1">Amount ($)</label>
+                <input
+                  type="number"
+                  name="amount"
+                  value={formData.amount}
+                  onChange={handleInputChange}
+                  className="w-full bg-white border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all font-medium text-foreground"
+                  placeholder="0.00"
+                  required
+                  min="1"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold tracking-widest text-mistral-black/40 uppercase ml-1">Payment Method</label>
+                <select
+                  name="paymentMethod"
+                  value={formData.paymentMethod}
+                  onChange={handleInputChange}
+                  className="w-full bg-white border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/20 focus:border-brand-orange transition-all font-medium text-foreground"
+                >
+                  {['Cash', 'Online', 'Card', 'Bank'].map(method => (
+                    <option key={method} value={method}>{method.toUpperCase()}</option>
+                  ))}
+                </select>
+              </div>
+              <Button type="submit" variant="brand" className="w-full h-12 mt-4 gap-2 font-bold tracking-widest text-xs uppercase">
+                <Plus size={16} />
+                Log Payment
+              </Button>
+            </form>
+          </Card>
         </div>
-      )}
+
+        {/* Payment History */}
+        <div className="lg:col-span-8 space-y-6">
+          <div className="flex items-center justify-between border-b border-border pb-4 px-1">
+            <div className="flex items-center gap-2">
+              <Receipt className="w-4 h-4 text-mistral-black/60" />
+              <h3 className="text-sm font-bold tracking-widest uppercase text-mistral-black/80">Payment History</h3>
+            </div>
+            <Badge variant="outline" className="text-[10px] font-bold">{payments.length} RECORDS</Badge>
+          </div>
+
+          {payments.length > 0 ? (
+            <div className="grid gap-3">
+              {payments.map((payment) => (
+                <Card key={payment.id} className="group border-border hover:border-mistral-black/20 transition-all p-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 rounded-xl bg-mistral-black/10 text-mistral-black/60 group-hover:bg-mistral-black group-hover:text-white transition-colors">
+                        {paymentIcons[payment.paymentMethod]}
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-foreground tracking-tight">{payment.name}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Badge variant="brand" className="text-[9px] h-4 font-bold tracking-wider">{payment.apartmentNumber}</Badge>
+                          <span className="text-[10px] font-bold tracking-widest text-mistral-black/60 uppercase">
+                            {payment.date}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-bold tracking-tight text-foreground">${payment.amount}</p>
+                      <span className="text-[10px] font-bold tracking-widest text-emerald-600 uppercase flex items-center justify-end gap-1 mt-1">
+                        <CheckCircle2 size={10} /> Paid
+                      </span>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="py-24 text-center border-2 border-dashed border-border rounded-2xl">
+              <Receipt className="w-10 h-10 text-mistral-black/20 mx-auto mb-4" />
+              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-mistral-black/40">No recent transactions</p>
+            </div>
+          )}
+        </div>
+      </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="border-2 border-transparent bg-gradient-to-r from-cyan-500 to-purple-500 p-1 rounded-lg animate-slideIn">
-            <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
-              <h3 className="text-xl font-bold text-gray-900">Payment Submitted</h3>
-              <p className="text-sm text-gray-700 mt-4">
-                Payment of ${formData.amount} for Apartment {formData.apartmentNumber} via {formData.paymentMethod} has been submitted.
+        <div 
+          className="fixed inset-0 bg-mistral-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-6"
+          onClick={() => setIsModalOpen(false)}
+        >
+          <Card 
+            className="max-w-sm w-full relative shadow-2xl animate-in fade-in zoom-in duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button 
+              onClick={() => setIsModalOpen(false)} 
+              className="absolute top-5 right-5 p-2 hover:bg-mistral-black/5 rounded-lg transition-colors"
+            >
+              <X className="w-4 h-4 text-mistral-black" />
+            </button>
+
+            <div className="py-4 text-center">
+              <div className="w-16 h-16 bg-emerald-500/10 flex items-center justify-center mx-auto mb-6 rounded-2xl">
+                <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+              </div>
+              <h3 className="text-xl font-bold mb-2 uppercase tracking-tight text-mistral-black">Payment Logged</h3>
+              <p className="text-sm text-mistral-black/70 mb-8 px-4 font-medium leading-relaxed">
+                The payment of <span className="text-foreground font-bold">${formData.amount}</span> has been recorded in the society ledger.
               </p>
-              <button
+              <Button 
+                variant="primary" 
+                className="w-full h-11 uppercase tracking-widest text-xs font-bold" 
                 onClick={() => {
                   setIsModalOpen(false);
                   setFormData({ name: '', apartmentNumber: '', amount: '', paymentMethod: 'Cash' });
                 }}
-                className="mt-6 bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:scale-105 hover:ring-2 hover:ring-cyan-300 transition-all duration-200"
               >
-                Close
-              </button>
+                Dismiss
+              </Button>
             </div>
-          </div>
+          </Card>
         </div>
       )}
     </div>
